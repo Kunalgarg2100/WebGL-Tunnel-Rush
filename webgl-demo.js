@@ -1,10 +1,76 @@
-var cubeRotation = 0.0;
 
 main();
 
 //
 // Start here
 //
+
+function create_octagon(){
+    var n = 8;
+    var r = 1.1;
+    var k = 0;
+    var angle = 0;
+    var depth = 0.75;
+    var positions = [];
+    for(var i=0;i<n;i++)
+    {
+        positions[k++] = r * Math.cos(angle);
+        positions[k++] = r * Math.sin(angle);
+        positions[k++] = -depth;
+        
+        positions[k++] = r * Math.cos(angle);
+        positions[k++] = r * Math.sin(angle);
+        positions[k++] = +depth;
+
+        angle += (2*Math.PI)/n;
+        
+        positions[k++] = r * Math.cos(angle);
+        positions[k++] = r * Math.sin(angle);
+        positions[k++] = -depth;
+        
+        positions[k++] = r * Math.cos(angle);
+        positions[k++] = r * Math.sin(angle);
+        positions[k++] = +depth;
+        //console.log(k);
+    }
+
+    var indices = [];
+    var k = 0;
+    for(var i = 0;i<n;i++)
+    {
+        indices[k++] = (4*i)%(4*n);
+        indices[k++] = (4*i+1)%(4*n);
+        indices[k++] = (4*i+2)%(4*n);
+        
+        indices[k++] = (4*i+1)%(4*n);
+        indices[k++] = (4*i+2)%(4*n);
+        indices[k++] = (4*i+3)%(4*n);
+        console.log(k);
+    }
+
+    return {
+        'faceColors' : [
+        [0.0, 0.0, 1.0, 1.0],    // blue
+        [1.0, 0.0, 0.0, 1.0],    // red
+        [0.0, 1.0, 0.0, 1.0],    // green
+        [1.0, 0.7, 0.2, 1.0],    // orange
+        [0.5, 0.1, 0.5, 1.0],    // dark purple
+        [1.0, 1.0, 0.0, 1.0],    // yellow
+        [1.0, 0.0, 1.0, 1.0],    // purple
+        [0.2, 1.0, 1.0, 1.0],    // turqoise
+    ],
+    'indices' : indices,
+    'numComponentsColor' : 4,
+    'numComponentsPosition' : 3,
+    'vertexCount' : 48,
+    'positions' : positions,
+    'rotationX' : 0,
+    'rotationY' : 0,
+    'rotationZ' : 0,
+
+
+    }
+}
 function main() {
     const canvas = document.querySelector('#glcanvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -65,7 +131,8 @@ function main() {
 
     // Here's where we call the routine that builds all the
     // objects we'll be drawing.
-    const buffers = initBuffers(gl);
+    shape = create_octagon();    
+    const buffers = initBuffers(gl,shape);
 
     var then = 0;
 
@@ -75,7 +142,7 @@ function main() {
         const deltaTime = now - then;
         then = now;
 
-        drawScene(gl, programInfo, buffers, deltaTime);
+        drawScene(gl, programInfo, buffers, deltaTime, shape);
 
         requestAnimationFrame(render);
     }
@@ -88,7 +155,7 @@ function main() {
 // Initialize the buffers we'll need. For this demo, we just
 // have one object -- a simple three-dimensional cube.
 //
-function initBuffers(gl) {
+function initBuffers(gl, shape) {
 
     // Create a buffer for the cube's vertex positions.
 
@@ -99,71 +166,7 @@ function initBuffers(gl) {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-    var n = 8;
-    var r = 1.1;
-    var k = 0;
-    var angle = 0;
-    var depth = 0.75;
-    var positions = [];
-    for(var i=0;i<n;i++)
-    {
-        positions[k++] = r * Math.cos(angle);
-        positions[k++] = r * Math.sin(angle);
-        positions[k++] = -depth;
-        
-        positions[k++] = r * Math.cos(angle);
-        positions[k++] = r * Math.sin(angle);
-        positions[k++] = +depth;
-
-        angle += (2*Math.PI)/n;
-        
-        positions[k++] = r * Math.cos(angle);
-        positions[k++] = r * Math.sin(angle);
-        positions[k++] = -depth;
-        
-        positions[k++] = r * Math.cos(angle);
-        positions[k++] = r * Math.sin(angle);
-        positions[k++] = +depth;
-        console.log(k);
-    }
-    console.log(positions);
-    /* const positions = [
-        // Front face
-        -1.0, -1.0, 1.0,
-        1.0, -1.0, 1.0,
-        1.0, 1.0, 1.0,
-        -1.0, 1.0, 1.0,
-
-        // Back face
-        -1.0, -1.0, -1.0,
-        -1.0, 1.0, -1.0,
-        1.0, 1.0, -1.0,
-        1.0, -1.0, -1.0,
-
-        // Top face
-        -1.0, 1.0, -1.0,
-        -1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0,
-        1.0, 1.0, -1.0,
-
-        // Bottom face
-        -1.0, -1.0, -1.0,
-        1.0, -1.0, -1.0,
-        1.0, -1.0, 1.0,
-        -1.0, -1.0, 1.0,
-
-        // Right face
-        1.0, -1.0, -1.0,
-        1.0, 1.0, -1.0,
-        1.0, 1.0, 1.0,
-        1.0, -1.0, 1.0,
-
-        // Left face
-        -1.0, -1.0, -1.0,
-        -1.0, -1.0, 1.0,
-        -1.0, 1.0, 1.0,
-        -1.0, 1.0, -1.0,
-    ]; */
+    const positions = shape.positions;
 
     // Now pass the list of positions into WebGL to build the
     // shape. We do this by creating a Float32Array from the
@@ -174,16 +177,7 @@ function initBuffers(gl) {
     // Now set up the colors for the faces. We'll use solid colors
     // for each face.
 
-    const faceColors = [
-        [0.0, 0.0, 1.0, 1.0],    // blue
-        [1.0, 0.0, 0.0, 1.0],    // red
-        [0.0, 1.0, 0.0, 1.0],    // green
-        [1.0, 0.7, 0.2, 1.0],    // orange
-        [0.5, 0.1, 0.5, 1.0],    // dark purple
-        [1.0, 1.0, 0.0, 1.0],    // yellow
-        [1.0, 0.0, 1.0, 1.0],    // purple
-        [0.2, 1.0, 1.0, 1.0],    // turqoise
-    ];
+    const faceColors = shape.faceColors;
 
     // Convert the array of colors into a table for all the vertices.
 
@@ -193,7 +187,9 @@ function initBuffers(gl) {
         const c = faceColors[j];
 
         // Repeat each color four times for the four vertices of the face
-        colors = colors.concat(c,c,c,c);
+       for (var i = 0; i < shape.numComponentsColor; ++i) {
+        colors = colors.concat(c);
+        }
     }
 
     const colorBuffer = gl.createBuffer();
@@ -209,28 +205,9 @@ function initBuffers(gl) {
     // This array defines each face as two triangles, using the
     // indices into the vertex array to specify each triangle's
     // position.
-    var indices = [];
-    var k = 0;
-    for(var i = 0;i<n;i++)
-    {
-        indices[k++] = (4*i)%(4*n);
-        indices[k++] = (4*i+1)%(4*n);
-        indices[k++] = (4*i+2)%(4*n);
-        
-        indices[k++] = (4*i+1)%(4*n);
-        indices[k++] = (4*i+2)%(4*n);
-        indices[k++] = (4*i+3)%(4*n);
-        console.log(k);
-    }
-    console.log(indices);
-    /* const indices = [
-        0, 1, 2, 0, 2, 3,    // front
-        4, 5, 6, 4, 6, 7,    // back
-        8, 9, 10, 8, 10, 11,   // top
-        12, 13, 14, 12, 14, 15,   // bottom
-        16, 17, 18, 16, 18, 19,   // right
-        20, 21, 22, 20, 22, 23,   // left
-    ]; */
+
+    
+    const indices = shape.indices;
 
     // Now send the element array to GL
 
@@ -247,7 +224,7 @@ function initBuffers(gl) {
 //
 // Draw the scene.
 //
-function drawScene(gl, programInfo, buffers, deltaTime) {
+function drawScene(gl, programInfo, buffers, deltaTime, shape) {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
     gl.clearDepth(1.0);                 // Clear everything
     gl.enable(gl.DEPTH_TEST);           // Enable depth testing
@@ -288,17 +265,27 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
     mat4.translate(modelViewMatrix,     // destination matrix
         modelViewMatrix,     // matrix to translate
         [-0.0, 0.0, -3.0]);  // amount to translate
-    mat4.rotate(modelViewMatrix,  // destination matrix
-        modelViewMatrix,  // matrix to rotate
-        cubeRotation,     // amount to rotate in radians
-        [0, 0, 1]);       // axis to rotate around (Z)
+    // mat4.rotate(modelViewMatrix,  // destination matrix
+    //     modelViewMatrix,  // matrix to rotate
+    //     shape.rotation_X,     // amount to rotate in radians
+    //     [1, 0, 0]);       // axis to rotate around (x)
+    
+    // mat4.rotate(modelViewMatrix,  // destination matrix
+    //     modelViewMatrix,  // matrix to rotate
+    //     shape.rotation_Y,     // amount to rotate in radians
+    //     [0, 1, 0]);       // axis to rotate around (y)
+    
+    // mat4.rotate(modelViewMatrix,  // destination matrix
+    //     modelViewMatrix,  // matrix to rotate
+    //     shape.rotation_Z,     // amount to rotate in radians
+    //     [0, 0, 1]);       // axis to rotate around (Z)
     
 
     // Tell WebGL how to pull out the positions from the position
     // buffer into the vertexPosition attribute
     
     {
-        const numComponents = 3;
+        const numComponents = shape.numComponentsPosition;
         const type = gl.FLOAT;
         const normalize = false;
         const stride = 0;
@@ -318,7 +305,7 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
     // Tell WebGL how to pull out the colors from the color buffer
     // into the vertexColor attribute.
     {
-        const numComponents = 4;
+        const numComponents = shape.numComponentsColor;
         const type = gl.FLOAT;
         const normalize = false;
         const stride = 0;
@@ -354,15 +341,13 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
         modelViewMatrix);
 
     {
-        const vertexCount = 8*6;
+        const vertexCount = shape.vertexCount;
         const type = gl.UNSIGNED_SHORT;
         const offset = 0;
         gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
     }
 
     // Update the rotation for the next draw
-
-    cubeRotation += deltaTime;
 }
 
 //
