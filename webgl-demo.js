@@ -67,6 +67,7 @@ function create_octagon(){
     'rotationX' : 0,
     'rotationY' : 0,
     'rotationZ' : 0,
+    'position' : [0, 0, 0],
 
 
     }
@@ -74,7 +75,7 @@ function create_octagon(){
 function main() {
     const canvas = document.querySelector('#glcanvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-
+    const numofoctagons = 11;
     // If we don't have a GL context, give up now
 
     if (!gl) {
@@ -131,8 +132,13 @@ function main() {
 
     // Here's where we call the routine that builds all the
     // objects we'll be drawing.
-    shape = create_octagon();    
-    const buffers = initBuffers(gl,shape);
+    shapes = [];
+    buffer_shapes = [];
+    for(var i=0;i<numofoctagons;i++){
+        shapes.push(create_octagon());
+        shapes[i].position[2] = -2*i;
+        buffer_shapes.push(initBuffers(gl, shapes[i]));
+    }    
 
     var then = 0;
 
@@ -141,8 +147,11 @@ function main() {
         now *= 0.001;  // convert to seconds
         const deltaTime = now - then;
         then = now;
+        const projectionMatrix = clearScene(gl);
 
-        drawScene(gl, programInfo, buffers, deltaTime, shape);
+         for(var i=0;i<numofoctagons;i++){
+            drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i]);
+        }
 
         requestAnimationFrame(render);
     }
@@ -221,11 +230,8 @@ function initBuffers(gl, shape) {
     };
 }
 
-//
-// Draw the scene.
-//
-function drawScene(gl, programInfo, buffers, deltaTime, shape) {
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
+function clearScene(gl){
+    gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Clear to black, fully opaque
     gl.clearDepth(1.0);                 // Clear everything
     gl.enable(gl.DEPTH_TEST);           // Enable depth testing
     gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
@@ -250,11 +256,18 @@ function drawScene(gl, programInfo, buffers, deltaTime, shape) {
     // note: glmatrix.js always has the first argument
     // as the destination to receive the result.
     mat4.perspective(projectionMatrix,
-        fieldOfView,
-        aspect,
-        zNear,
-        zFar);
+                     fieldOfView,
+                     aspect,
+                     zNear,
+                     zFar);
+    return projectionMatrix;
+}
 
+//
+// Draw the scene.
+//
+function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape) {
+    
     // Set the drawing position to the "identity" point, which is
     // the center of the scene.
     const modelViewMatrix = mat4.create();
@@ -264,7 +277,7 @@ function drawScene(gl, programInfo, buffers, deltaTime, shape) {
 
     mat4.translate(modelViewMatrix,     // destination matrix
         modelViewMatrix,     // matrix to translate
-        [-0.0, 0.0, -3.0]);  // amount to translate
+        shape.position);  // amount to translate
     // mat4.rotate(modelViewMatrix,  // destination matrix
     //     modelViewMatrix,  // matrix to rotate
     //     shape.rotation_X,     // amount to rotate in radians
