@@ -1,5 +1,10 @@
-var numofoctagons = 11;
-main();
+var numofoctagons = 10;
+var numofobstracles = 2;
+
+var typesofobstracles = 1
+var gameplay = 1;
+var statusKeys = {};
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
@@ -89,9 +94,110 @@ function create_octagon(){
     'position' : [0, 0, 0],
     'category' : category,
     }
-
 }
-var statusKeys = {};
+
+function create_cuboid(){
+    var n = 6;
+    var positions = [];
+    var len = 72;
+    for(var i = 0; i < len; i++) {
+        positions.push(1);
+    }
+    var length = Math.tan(Math.PI/8)/3;
+    var height = 1.0;
+    var width = Math.tan(Math.PI/8)/50;
+
+        /*Right Face*/
+    x = 0;
+    for(var i=0;i<4;i++)
+        positions[3*i+x] = length;
+    positions[1+x] = positions[4+x] = height;
+    positions[7+x] = positions[10+x] = -height;
+    positions[2+x] = positions[11+x] = width;
+    positions[5+x] = positions[8+x] = -width;
+
+    /*Left Face*/
+    x = 12;
+    for(var i=0;i<4;i++)
+        positions[3*i+x] = -length;
+    positions[1+x] = positions[4+x] = height;
+    positions[7+x] = positions[10+x] = -height;
+    positions[2+x] = positions[11+x] = width;
+    positions[5+x] = positions[8+x] = -width;
+
+    /* Top  Face*/
+    var x = 24;
+    for(var i=0;i<4;i++)
+        positions[3*i+1+x] = height;
+    positions[0+x]= positions[9+x] = -length;
+    positions[3+x]= positions[6+x] = length;
+    positions[2+x] = positions[5+x] = width;
+    positions[8+x] = positions[11+x] = -width;
+
+    /* Bottom Face*/
+    x = 36;
+    for(var i=0;i<4;i++)
+        positions[3*i+1+x] = -height;
+    positions[0+x]= positions[9+x] = -length;
+    positions[3+x]= positions[6+x] = length;
+    positions[2+x] = positions[5+x] = width;
+    positions[8+x] = positions[11+x] = -width;
+
+
+    /*Front Face*/
+    x = 48;
+    for(var i=0;i<4;i++)
+        positions[3*i+2+x] = width;
+    positions[0+x] = positions[9+x] = -length;
+    positions[3+x] = positions[6+x] = length;
+    positions[1+x] = positions[4+x] = height;
+    positions[7+x] = positions[10+x] = -height;
+
+    /*Back Face*/
+    x = 60;
+    for(var i=0;i<4;i++)
+        positions[3*i+2+x] = -width;
+    positions[0+x] = positions[9+x] = -length;
+    positions[3+x] = positions[6+x] = length;
+    positions[1+x] = positions[4+x] = height;
+    positions[7+x] = positions[10+x] = -height;
+
+    var indices = [];
+    var k = 0;
+    for(var i = 0;i< n;i++)
+    {
+        indices[k++] = (4*i)%(4*n);
+        indices[k++] = (4*i+1)%(4*n);
+        indices[k++] = (4*i+2)%(4*n);
+        indices[k++] = (4*i)%(4*n);
+        indices[k++] = (4*i+2)%(4*n);
+        indices[k++] = (4*i+3)%(4*n);
+    }
+
+    var faceColors = [
+      [1.0,  0.0,  0.0,  1.0],    // Right face: red
+      [1.0,  0.0,  0.0,  1.0],    // Left face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Bottom face: red
+      [1.0,  0.0,  0.0,  1.0],    // Front face: red
+      [1.0,  0.0,  0.0,  1.0],    // Back face: red
+    ]
+
+    return {
+    'faceColors' : faceColors,
+    'indices' : indices,
+    'numComponentsColor' : 4,
+    'numComponentsPosition' : 3,
+    'vertexCount' : 36,
+    'positions' : positions,
+    'rotation_X' : 0,
+    'rotation_Y' : 0,
+    'rotation_Z' : 0,
+    'speed'     : 7,
+    'rotation'  : Math.PI * Math.random(),
+    'position' : [0, 0, -20],
+    }
+}
 
 /*The keydown event occurs when a keyboard key is pressed down.*/
 $(document).keydown(function(event){
@@ -102,7 +208,12 @@ $(document).keydown(function(event){
 
 /* The keyup event occurs when a keyboard key is released. */
 $(document).keyup(function(event){
+
     var charCode = event.keyCode;
+     if(charCode == 80){
+        // P Key
+        gameplay = 1 - gameplay;
+    }
     var charStr = String.fromCharCode(charCode);
     statusKeys[charCode] = false;
 });
@@ -173,6 +284,15 @@ function main() {
         shapes.push(create_octagon());
         shapes[i].position[2] = -2*i;
         buffer_shapes.push(initBuffers(gl, shapes[i]));
+    }
+
+    obstracles = [];
+    buffer_obstracles = [];
+    for(var i=0;i<numofobstracles;i++){
+        obstracles.push(create_cuboid());
+        obstracles[i].position[2] = -10*i;
+        obstracles[i].rotation_Z = i*Math.PI/numofobstracles;
+        buffer_obstracles.push(initBuffers(gl, obstracles[i]));
     }    
 
     var then = 0;
@@ -184,11 +304,19 @@ function main() {
         then = now;
         const projectionMatrix = clearScene(gl);
         refresh_tunnel(gl, shapes, buffer_shapes);
+        refresh_obstracles(gl, obstracles, buffer_obstracles);
+
+        if(gameplay)
         handleKeys(shapes);
 
         for(var i=0;i<numofoctagons;i++){
-            shapes[i].position[2] += shapes[i].speed * deltaTime;
+            shapes[i].position[2] += gameplay * shapes[i].speed * deltaTime;
             drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i]);
+        }
+        for(var i=0;i<numofobstracles;i++){
+            obstracles[i].position[2] += gameplay * obstracles[i].speed * deltaTime;
+            obstracles[i].rotation_Z += obstracles[i].rotation * deltaTime;
+            drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i]);
         }
 
         requestAnimationFrame(render);
@@ -270,6 +398,7 @@ function initBuffers(gl, shape) {
 
 
 function handleKeys(shapes){
+
 
     if(statusKeys[37]){
             // Left Key
@@ -420,19 +549,37 @@ function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape)
     // Update the rotation for the next draw
 }
 
-function refresh_tunnel(gl, shapes, buffers)
+function refresh_tunnel(gl, shapes, buffer_shapes)
 {
     if(shapes.length && shapes[0].position[2] > 1){
         shapes.shift();
-        buffers.shift();
+        buffer_shapes.shift();
         numofoctagons--;
         shapes.push(create_octagon());
         numofoctagons++;
         shapes[numofoctagons - 1].position[2] = shapes[numofoctagons - 2].position[2] - 2;
-        shapes[numofoctagons - 1].rotationX = shapes[numofoctagons - 2].rotationX;
-        shapes[numofoctagons - 1].rotationY = shapes[numofoctagons - 2].rotationY;
-        shapes[numofoctagons - 1].rotationZ = shapes[numofoctagons - 2].rotationZ;
-        buffers.push(initBuffers(gl, shapes[numofoctagons - 1]));
+        shapes[numofoctagons - 1].rotation_X = shapes[numofoctagons - 2].rotation_X;
+        shapes[numofoctagons - 1].rotation_Y = shapes[numofoctagons - 2].rotation_Y;
+        shapes[numofoctagons - 1].rotation_Z = shapes[numofoctagons - 2].rotation_Z;
+        buffer_shapes.push(initBuffers(gl, shapes[numofoctagons - 1]));
+    }
+}
+
+function refresh_obstracles(gl, obstracles, buffer_obstracles){
+    if(obstracles.length &&  obstracles[0].position[2] > 1){
+        obstracles.shift();
+        buffer_obstracles.shift();
+        numofobstracles--;
+        obstracles.push(create_cuboid());
+        numofobstracles++;
+        obstracles[numofobstracles - 1].rotation_Z = Math.random()*Math.PI;
+        buffer_obstracles.push(initBuffers(gl, obstracles[numofobstracles - 1]));
+    }
+    else if(obstracles.length == 0){
+        obstracles.push(create_cuboid());
+        numofobstracles++;
+        obstracles[numofobstracles - 1].rotationZ = Math.random()*Math.PI;
+        buffer_obstracles.push(initBuffers(gl, obstracles[numofobstracles - 1]));
     }
 }
 
@@ -486,3 +633,5 @@ function loadShader(gl, type, source) {
     return shader;
 }
 
+
+main();
