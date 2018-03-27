@@ -199,6 +199,67 @@ function create_cuboid(){
     }
 }
 
+function create_halfoctagon(){
+    var len = 1;
+    hgt = Math.cos(Math.PI/8)
+    var width = Math.tan(Math.PI/8)/50;
+    var faceColors = [
+      [1.0,  0.0,  0.0,  1.0],    // Front face: red
+      [1.0,  0.0,  0.0,  1.0],    // Back face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Front face: red
+      [1.0,  0.0,  0.0,  1.0],    // Back face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+    ]
+
+    return {
+    'faceColors' : faceColors,
+    'indices' : [
+      0,  1,  2,      0,  2,  3,   
+      0, 3, 4,    0, 4, 5,  // front
+      6,  7,  8,      6,  8,  9,    
+      6, 9, 10,   6, 10, 11,  ///back
+      12, 13, 14,   12, 14, 15,   
+      12, 15, 16,  12, 16, 17],    // top
+    
+    'numComponentsColor' : 4,
+    'numComponentsPosition' : 3,
+    'vertexCount' : 24,
+    'positions' : [
+      // front face
+      0,0,width,
+      len, 0, width,
+      hgt,-hgt,width,
+      len, -1,width,
+      -hgt,-hgt,width,
+      -len, 0, width,
+
+      // back face
+      0,0,-width,
+      len, 0, -width,
+      hgt,-hgt,-width,
+      len, -1,-width,
+      -hgt,-hgt,-width,
+      -len, 0, -width,
+
+      // Top faces
+      0,0,width,
+      len, 0, width,
+      len, 0, -width,
+      0,0,-width,
+      -len, 0, -width,
+      -len, 0, width,
+      
+    ],
+    'rotation_X' : 0,
+    'rotation_Y' : 0,
+    'rotation_Z' : 0,
+    'speed'     : 7,
+    'rotation'  : Math.PI * Math.random(),
+    'position' : [0, 0, -20],
+    }
+}
+
 /*The keydown event occurs when a keyboard key is pressed down.*/
 $(document).keydown(function(event){
     var charCode = event.keyCode;
