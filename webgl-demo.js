@@ -44,7 +44,7 @@ function create_octagon(){
         indices[k++] = (4*i+1)%(4*n);
         indices[k++] = (4*i+2)%(4*n);
         indices[k++] = (4*i+3)%(4*n);
-        console.log(k);
+        //console.log(k);
     }
 
     var faceColors = [
@@ -81,15 +81,32 @@ function create_octagon(){
     'numComponentsPosition' : 3,
     'vertexCount' : 48,
     'positions' : positions,
-    'rotationX' : 0,
-    'rotationY' : 0,
-    'rotationZ' : 0,
+    'rotation_X' : 0,
+    'rotation_Y' : 0,
+    'rotation_Z' : 0,
     'speed'     : 7,
     'rotation'  : 0.05,
     'position' : [0, 0, 0],
     'category' : category,
     }
+
 }
+var statusKeys = {};
+
+/*The keydown event occurs when a keyboard key is pressed down.*/
+$(document).keydown(function(event){
+    var charCode = event.keyCode;
+    var charStr = String.fromCharCode(charCode);
+    statusKeys[charCode] = true; 
+});
+
+/* The keyup event occurs when a keyboard key is released. */
+$(document).keyup(function(event){
+    var charCode = event.keyCode;
+    var charStr = String.fromCharCode(charCode);
+    statusKeys[charCode] = false;
+});
+
 function main() {
     const canvas = document.querySelector('#glcanvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -167,6 +184,7 @@ function main() {
         then = now;
         const projectionMatrix = clearScene(gl);
         refresh_tunnel(gl, shapes, buffer_shapes);
+        handleKeys(shapes);
 
         for(var i=0;i<numofoctagons;i++){
             shapes[i].position[2] += shapes[i].speed * deltaTime;
@@ -250,6 +268,25 @@ function initBuffers(gl, shape) {
     };
 }
 
+
+function handleKeys(shapes){
+
+    if(statusKeys[37]){
+            // Left Key
+            console.log('left key');
+            for(var i = 0; i < numofoctagons; i++){
+                shapes[i].rotation_Z += shapes[i].rotation;
+            }
+    }
+    if(statusKeys[39]){
+            // Right Key
+            console.log('right key');
+            for(var i = 0; i < numofoctagons; i++){
+                shapes[i].rotation_Z -= shapes[i].rotation;
+            }
+    }
+}
+
 function clearScene(gl){
     gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Clear to black, fully opaque
     gl.clearDepth(1.0);                 // Clear everything
@@ -298,20 +335,20 @@ function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape)
     mat4.translate(modelViewMatrix,     // destination matrix
         modelViewMatrix,     // matrix to translate
         shape.position);  // amount to translate
-    // mat4.rotate(modelViewMatrix,  // destination matrix
-    //     modelViewMatrix,  // matrix to rotate
-    //     shape.rotation_X,     // amount to rotate in radians
-    //     [1, 0, 0]);       // axis to rotate around (x)
+    mat4.rotate(modelViewMatrix,  // destination matrix
+                modelViewMatrix,  // matrix to rotate
+                shape.rotation_X,     // amount to rotate in radians
+                [1, 0, 0]);       // axis to rotate around (x)
     
-    // mat4.rotate(modelViewMatrix,  // destination matrix
-    //     modelViewMatrix,  // matrix to rotate
-    //     shape.rotation_Y,     // amount to rotate in radians
-    //     [0, 1, 0]);       // axis to rotate around (y)
+    mat4.rotate(modelViewMatrix,  // destination matrix
+        modelViewMatrix,  // matrix to rotate
+        shape.rotation_Y,     // amount to rotate in radians
+        [0, 1, 0]);       // axis to rotate around (y)
     
-    // mat4.rotate(modelViewMatrix,  // destination matrix
-    //     modelViewMatrix,  // matrix to rotate
-    //     shape.rotation_Z,     // amount to rotate in radians
-    //     [0, 0, 1]);       // axis to rotate around (Z)
+    mat4.rotate(modelViewMatrix,  // destination matrix
+        modelViewMatrix,  // matrix to rotate
+        shape.rotation_Z,     // amount to rotate in radians
+        [0, 0, 1]);       // axis to rotate around (Z)
     
 
     // Tell WebGL how to pull out the positions from the position
