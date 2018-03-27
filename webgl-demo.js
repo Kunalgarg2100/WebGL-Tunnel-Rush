@@ -1,16 +1,15 @@
-
+var numofoctagons = 11;
 main();
-
-//
-// Start here
-//
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
 
 function create_octagon(){
     var n = 8;
-    var r = 1.1;
+    var r = 1;
     var k = 0;
     var angle = 0;
-    var depth = 0.75;
+    var depth = 1;
     var positions = [];
     for(var i=0;i<n;i++)
     {
@@ -48,17 +47,35 @@ function create_octagon(){
         console.log(k);
     }
 
-    return {
-        'faceColors' : [
-        [0.0, 0.0, 1.0, 1.0],    // blue
+    var faceColors = [
+    [[0.0, 0.0, 1.0, 1.0],    // blue
         [1.0, 0.0, 0.0, 1.0],    // red
         [0.0, 1.0, 0.0, 1.0],    // green
         [1.0, 0.7, 0.2, 1.0],    // orange
         [0.5, 0.1, 0.5, 1.0],    // dark purple
         [1.0, 1.0, 0.0, 1.0],    // yellow
         [1.0, 0.0, 1.0, 1.0],    // purple
-        [0.2, 1.0, 1.0, 1.0],    // turqoise
-    ],
+        [0.2, 1.0, 1.0, 1.0]],
+    [[1.0,  1.0,  1.0,  1.0],    // Right face: white
+      [0.0,  0.0,  0.0,  1.0],    // Top Right face: black
+      [1.0,  1.0,  1.0,  1.0],    // Top face: white
+      [0.0,  0.0,  0.0,  1.0],    // Top Left Right face: black
+      [1.0,  1.0,  1.0,  1.0],    // Left face: white
+      [0.0,  0.0,  0.0,  1.0],    // Bottom Left face: black
+      [1.0,  1.0,  1.0,  1.0],    // Bottom face: white
+      [0.0,  0.0,  0.0,  1.0]],
+    [[0.0,  0.0,  0.0,  1.0],    // Right face: white
+      [1.0,  1.0,  1.0,  1.0],    // Top Right face: black
+      [0.0,  0.0,  0.0,  1.0],    // Top face: white
+      [1.0,  1.0,  1.0,  1.0],    // Top Left Right face: black
+      [0.0,  0.0,  0.0,  1.0],    // Left face: white
+      [1.0,  1.0,  1.0,  1.0],    // Bottom Left face: black
+      [0.0,  0.0,  0.0,  1.0],    // Bottom face: white
+      [1.0,  1.0,  1.0,  1.0]]]
+        // turqoise]
+    var category = getRandomInt(3);
+    return {
+    'faceColors' : faceColors[category],
     'indices' : indices,
     'numComponentsColor' : 4,
     'numComponentsPosition' : 3,
@@ -67,15 +84,16 @@ function create_octagon(){
     'rotationX' : 0,
     'rotationY' : 0,
     'rotationZ' : 0,
+    'speed'     : 7,
+    'rotation'  : 0.05,
     'position' : [0, 0, 0],
-
-
+    'category' : category,
     }
 }
 function main() {
     const canvas = document.querySelector('#glcanvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    const numofoctagons = 11;
+    //const numofoctagons = 11;
     // If we don't have a GL context, give up now
 
     if (!gl) {
@@ -148,8 +166,10 @@ function main() {
         const deltaTime = now - then;
         then = now;
         const projectionMatrix = clearScene(gl);
+        refresh_tunnel(gl, shapes, buffer_shapes);
 
-         for(var i=0;i<numofoctagons;i++){
+        for(var i=0;i<numofoctagons;i++){
+            shapes[i].position[2] += shapes[i].speed * deltaTime;
             drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i]);
         }
 
@@ -363,6 +383,22 @@ function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape)
     // Update the rotation for the next draw
 }
 
+function refresh_tunnel(gl, shapes, buffers)
+{
+    if(shapes.length && shapes[0].position[2] > 1){
+        shapes.shift();
+        buffers.shift();
+        numofoctagons--;
+        shapes.push(create_octagon());
+        numofoctagons++;
+        shapes[numofoctagons - 1].position[2] = shapes[numofoctagons - 2].position[2] - 2;
+        shapes[numofoctagons - 1].rotationX = shapes[numofoctagons - 2].rotationX;
+        shapes[numofoctagons - 1].rotationY = shapes[numofoctagons - 2].rotationY;
+        shapes[numofoctagons - 1].rotationZ = shapes[numofoctagons - 2].rotationZ;
+        buffers.push(initBuffers(gl, shapes[numofoctagons - 1]));
+    }
+}
+
 //
 // Initialize a shader program, so WebGL knows how to draw our data
 
@@ -412,3 +448,4 @@ function loadShader(gl, type, source) {
 
     return shader;
 }
+
