@@ -358,6 +358,85 @@ function create_2halfoctagon(){
     }
 }
 
+function create_2triangles(){
+    var len = 1;
+    var centre_height = 0.3;
+
+    hgt = Math.cos(Math.PI/16)
+    var width = Math.tan(Math.PI/8)/50;
+    var faceColors = [
+      [1.0,  0.0,  0.0,  1.0],    // Front face: red
+      [1.0,  0.0,  0.0,  1.0],    // Back face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Front face: red
+
+      [1.0,  0.0,  0.0,  1.0],    // Back face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+
+    ]
+
+    return {
+    'faceColors' : faceColors,
+    'indices' : [
+      0,  1,  2,      
+      3,  4,  5,      
+      6,  7,  8,
+      9, 10, 11,  ///back
+      12, 13, 14,   
+      15, 16, 17,  
+      18, 19, 20,
+      21, 22, 23],    // top
+    
+    'numComponentsColor' : 4,
+    'numComponentsPosition' : 3,
+    'vertexCount' : 24,
+    'positions' : [
+      // front face
+      0,centre_height,0,
+      hgt,len,-width,
+      -hgt,len,-width,
+
+      0,centre_height,0,
+      hgt,len,width,
+      -hgt,len,width,
+
+      0,centre_height,0,
+      hgt,len,width,
+      hgt,len,-width,
+
+        0,centre_height,0,
+      -hgt,len,width,
+      -hgt,len,-width,
+
+        0,-centre_height,0,
+      hgt,-len,-width,
+      -hgt,-len,-width,
+
+      0,-centre_height,0,
+      hgt,-len,width,
+      -hgt,-len,width,
+
+      0,-centre_height,0,
+      hgt,-len,width,
+      hgt,-len,-width,
+
+        0,-centre_height,0,
+      -hgt,-len,width,
+      -hgt,-len,-width,
+      
+    ],
+    'rotation_X' : 0,
+    'rotation_Y' : 0,
+    'rotation_Z' : 0,
+    'speed'     : 7,
+    'rotation'  : Math.PI * Math.random(),
+    'position' : [0, 0, -25],
+    }
+}
+
+
 /*The keydown event occurs when a keyboard key is pressed down.*/
 $(document).keydown(function(event){
     var charCode = event.keyCode;
