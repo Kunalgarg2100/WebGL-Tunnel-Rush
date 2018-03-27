@@ -260,6 +260,104 @@ function create_halfoctagon(){
     }
 }
 
+function create_2halfoctagon(){
+    var len = 1;
+    var hgt = Math.cos(Math.PI/8)
+    var width = Math.tan(Math.PI/8)/50;
+    var centre_height = 0.3;
+
+    var faceColors = [
+      [1.0,  0.0,  0.0,  1.0],    // Front face: red 
+      [1.0,  0.0,  0.0,  1.0],    // Back face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+
+      [1.0,  0.0,  0.0,  1.0],    // Front face: red 
+      [1.0,  0.0,  0.0,  1.0],    // Back face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+      [1.0,  0.0,  0.0,  1.0],    // Top face: red
+
+    ]
+
+    return {
+    'faceColors' : faceColors,
+    'indices' : [
+      0,  1,  2,      0,  2,  3,  
+      0, 3, 4,    0, 4, 5,  // front
+      6,  7,  8,      6,  8,  9,    
+      6, 9, 10,   6, 10, 11 ,  ///back
+      12,  13,  14,    12,  14,  15, 
+      12, 15, 16,  12, 16, 17,
+      18,  19,  20,    18,  20,  21,   
+      18, 21,22,    18, 22, 23,  // front
+      24,  25,  26,    24,  26,  27, 
+      24, 27, 28,   24, 28, 29 ,  ///back
+      30,  31,  32,    30,  32,  33,
+      30, 33, 34,  30, 34, 35],    // top
+    
+    'numComponentsColor' : 4,
+    'numComponentsPosition' : 3,
+    'vertexCount' : 48,
+    'positions' : [
+      // front face
+      0,-centre_height,width,
+      len, -centre_height, width,
+      hgt,-hgt,width,
+      len, -1,width,
+      -hgt,-hgt,width,
+      -len, -centre_height, width,
+
+      // back face
+      0,-centre_height,-width,
+      len, -centre_height, -width,
+      hgt,-hgt,-width,
+      len, -1,-width,
+      -hgt,-hgt,-width,
+      -len, -centre_height, -width,
+
+       0, -centre_height,width,
+      len, -centre_height, width,
+      len, -centre_height, -width,
+      0,-centre_height,-width,
+      -len, -centre_height, -width,
+      -len, -centre_height, width,
+
+        0,centre_height,width,
+      len, centre_height, width,
+      hgt,hgt,width,
+      len, 1,width,
+      -hgt,hgt,width,
+      -len, centre_height, width,
+
+      // back face
+      0,centre_height,-width,
+      len, centre_height, -width,
+      hgt,hgt,-width,
+      len, 1,-width,
+      -hgt,hgt,-width,
+      -len, centre_height, -width,
+
+       0, centre_height,width,
+      len, centre_height, width,
+      len, centre_height, -width,
+      0,centre_height,-width,
+      -len, centre_height, -width,
+      -len, centre_height, width,
+      
+    ],
+    'rotation_X' : 0,
+    'rotation_Y' : 0,
+    'rotation_Z' : 0,
+    'speed'     : 7,
+    'rotation'  : Math.PI * Math.random(),
+    'position' : [0, 0, -20],
+    }
+}
+
 /*The keydown event occurs when a keyboard key is pressed down.*/
 $(document).keydown(function(event){
     var charCode = event.keyCode;
