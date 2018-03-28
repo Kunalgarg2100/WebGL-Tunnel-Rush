@@ -4,7 +4,44 @@ var numoftextures = 2;
 var textures = []
 var myArray = []
 var myArray1 = []
+var framecnt = 0;
+var vertex_Normal = [
+        // Right
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
 
+    // Left
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    // Top
+     0.0,  1.0,  0.0,
+     0.0,  1.0,  0.0,
+     0.0,  1.0,  0.0,
+     0.0,  1.0,  0.0,
+
+    // Bottom
+     0.0, -1.0,  0.0,
+     0.0, -1.0,  0.0,
+     0.0, -1.0,  0.0,
+     0.0, -1.0,  0.0,
+     // Front
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+
+    // Back
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+    ]
+
+/* https://webglfundamentals.org/webgl/lessons/webgl-3d-textures.html */
 var texture_name = ['diff2.jpg']
 var color_red = [0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19];
 var differ_colors = [
@@ -18,7 +55,7 @@ var differ_colors = [
 [   0.01,  0.81, 0.19,  0.81, 0.01,  0.99,  0.19,  0.99 ]] // pink
 
 var typesofobstracles = 1
-var gameplay = 1;
+var gameplay = 0;
 var statusKeys = {};
 
 function getRandomInt(max) {
@@ -112,6 +149,57 @@ function create_octagon(){
       [1.0,  1.0,  1.0,  1.0]]]
 
 */
+    var norm1 = Math.cos(Math.PI/8);
+    var norm2 = Math.cos(3*Math.PI/8);
+
+var vertexNormals = [
+    // top right 1
+    norm1,norm1,0,
+    norm1,norm1,0,
+    norm1,norm1,0,
+    norm1,norm1,0,
+
+    // top right 2
+    -norm2,-norm2,0,
+    -norm2,-norm2,0,
+    -norm2,-norm2,0,
+    -norm2,-norm2,0,
+
+    // top left 2
+    norm2,-norm2,0,
+    norm2,-norm2,0,
+    norm2,-norm2,0,
+    norm2,-norm2,0,
+
+    // top left 1
+    norm1,norm1,0,
+    norm1,norm1,0,
+    norm1,norm1,0,
+    norm1,norm1,0,
+
+    //bottom left 2
+    -norm1,-norm1,0,
+    -norm1,-norm1,0,
+    -norm1,-norm1,0,
+    -norm1,-norm1,0,
+
+    // top right 2
+    norm2,norm2,0,
+    norm2,norm2,0,
+    norm2,norm2,0,
+    norm2,norm2,0,
+
+    // top left 2
+    norm2,norm2,0,
+    norm2,norm2,0,
+    norm2,norm2,0,
+    norm2,norm2,0,
+
+    // top left 1
+     norm1,-norm1,0,
+    norm1,-norm1,0,
+    norm1,-norm1,0,
+    norm1,-norm1,0,];
     var textureCoordinates = [
    [0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59, // white
    0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79, // black
@@ -158,6 +246,7 @@ function create_octagon(){
     'numComponentsColor' : 4,
     'numComponentsPosition' : 3,
     'vertexCount' : 48,
+    'vertexNormals' : vertexNormals,
     'positions' : positions,
     'rotation_X' : 0,
     'rotation_Y' : 0,
@@ -255,6 +344,7 @@ function create_cuboid(){
     //   [1.0,  0.0,  0.0,  1.0],    // Front face: red
     //   [1.0,  0.0,  0.0,  1.0],    // Back face: red
     // ]
+    var vertexNormals = vertex_Normal;
 
 var textureCoordinates = []
     for(var i = 0;i<n;i++){    
@@ -278,6 +368,7 @@ console.log(textureCoordinates)
     'numComponentsColor' : 4,
     'numComponentsPosition' : 3,
     'textureCoordinates' : textureCoordinates,
+    'vertexNormals' : vertexNormals,
     'vertexCount' : 36,
     'positions' : positions,
     'rotation_X' : 0,
@@ -301,9 +392,18 @@ function create_halfoctagon(){
       [1.0,  0.0,  0.0,  1.0],    // Back face: red
       [1.0,  0.0,  0.0,  1.0],    // Top face: red
     ]
+    var textureCoordinates = []
+    for(var i = 0;i<6;i++){    
+    textureCoordinates.push(color_red);
+}
+    textureCoordinates = textureCoordinates.reduce((acc, val) => acc.concat(val), []);
+
+    var vertexNormals = vertex_Normal;
 
     return {
-    'faceColors' : faceColors,
+    'textureCoordinates' : textureCoordinates,
+
+    //'faceColors' : faceColors,
     'indices' : [
       0,  1,  2,      0,  2,  3,   
       0, 3, 4,    0, 4, 5,  // front
@@ -341,6 +441,7 @@ function create_halfoctagon(){
       -len, 0, width,
       
     ],
+    'vertexNormals' : vertexNormals,
     'rotation_X' : 0,
     'rotation_Y' : 0,
     'rotation_Z' : 0,
@@ -371,10 +472,25 @@ function create_2halfoctagon(){
       [1.0,  0.0,  0.0,  1.0],    // Top face: red
       [1.0,  0.0,  0.0,  1.0],    // Top face: red
 
-    ]
+    ];
+
+    var textureCoordinates = []
+    for(var i = 0;i<12;i++){    
+    textureCoordinates.push(color_red);
+}
+    textureCoordinates = textureCoordinates.reduce((acc, val) => acc.concat(val), []);
+
+
+    var vertexNormals = []
+    for(var i = 0;i<2;i++){    
+    vertexNormals.push(vertex_Normal);
+}
+    vertexNormals = vertexNormals.reduce((acc, val) => acc.concat(val), []);
+
 
     return {
-    'faceColors' : faceColors,
+    'textureCoordinates' : textureCoordinates,
+    'vertexNormals' : vertexNormals,
     'indices' : [
       0,  1,  2,      0,  2,  3,  
       0, 3, 4,    0, 4, 5,  // front
@@ -465,10 +581,66 @@ function create_2triangles(){
       [1.0,  0.0,  0.0,  1.0],    // Top face: red
       [1.0,  0.0,  0.0,  1.0],    // Top face: red
 
+    ];
+
+    var textureCoordinates = []
+    for(var i = 0;i<8;i++){    
+        textureCoordinates.push(color_red);
+    }
+
+    textureCoordinates = textureCoordinates.reduce((acc, val) => acc.concat(val), []);
+    var vertexNormals = [
+    // Front
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+
+    // Back
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+        // Right
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+
+    // Left
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+
+    // Front
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+
+    // Back
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+        // Right
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+
+    // Left
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
     ]
 
     return {
-    'faceColors' : faceColors,
+    'textureCoordinates' : textureCoordinates,
+    'vertexNormals' : vertexNormals,
+    //'faceColors' : faceColors,
     'indices' : [
       0,  1,  2,      
       3,  4,  5,      
@@ -561,16 +733,29 @@ function main() {
 
     const vsSource = `
     attribute vec4 aVertexPosition;
+    attribute vec3 aVertexNormal;
     attribute vec2 aTextureCoord;
 
+    uniform mat4 uNormalMatrix;
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
 
     varying highp vec2 vTextureCoord;
+    varying highp vec3 vLighting;
 
     void main(void) {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
       vTextureCoord = aTextureCoord;
+      // Apply lighting effect
+
+      highp vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+      highp vec3 directionalLightColor = vec3(1, 1, 1);
+      highp vec3 directionalVector = normalize(vec3(0.1, 0.6, 0.1));
+
+      highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
+
+      highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+      vLighting = ambientLight + (directionalLightColor * directional);
     }
   `;
 
@@ -579,14 +764,16 @@ function main() {
     const fsSource = `
     precision mediump float;
     varying vec2 vTextureCoord;
+    varying highp vec3 vLighting;
 
     uniform sampler2D texture0;
     uniform sampler2D texture1;
 
     void main(void) {
-        vec4 color0 = texture2D(texture0, vTextureCoord);
-        vec4 color1 = texture2D(texture1, vTextureCoord);
-        gl_FragColor = color0;
+        highp vec4 color0 = texture2D(texture0, vTextureCoord);
+        highp vec4 color1 = texture2D(texture1, vTextureCoord);
+        gl_FragColor = vec4(color0.rgb * vLighting, color0.a);
+        //gl_FragColor = color0;
     }
   `;
 
@@ -603,10 +790,12 @@ function main() {
         attribLocations: {
             vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
              textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
+             vertexNormal: gl.getAttribLocation(shaderProgram, 'aVertexNormal'),
         },
         uniformLocations: {
             projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
             modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+            normalMatrix: gl.getUniformLocation(shaderProgram, 'uNormalMatrix'),
             texture0: gl.getUniformLocation(shaderProgram, 'texture0'),
             texture1: gl.getUniformLocation(shaderProgram, 'texture1'),
         },
@@ -625,7 +814,7 @@ function main() {
     obstracles = [];
     buffer_obstracles = [];
     for(var i=0;i<numofobstracles;i++){
-        obstracles.push(create_cuboid());
+        obstracles.push(create_2halfoctagon());
         obstracles[i].position[2] = -10*i;
         obstracles[i].rotation_Z = i*Math.PI/numofobstracles;
         buffer_obstracles.push(initBuffers(gl, obstracles[i]));
@@ -639,6 +828,7 @@ function main() {
     var then = 0;
     // Draw the scene repeatedly
     function render(now) {
+        framecnt++;
         now *= 0.001;  // convert to seconds
         const deltaTime = now - then;
         then = now;
@@ -650,9 +840,10 @@ function main() {
         handleKeys(shapes);
 
         for(var i=0;i<numofoctagons;i++){
-            shapes[i].position[2] += gameplay * shapes[i].speed * deltaTime;
+            shapes[i].position[2] += shapes[i].speed * deltaTime;
             drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i],texture);
         }
+        if(gameplay)
         for(var i=0;i<numofobstracles;i++){
             obstracles[i].position[2] += gameplay * obstracles[i].speed * deltaTime;
             obstracles[i].rotation_Z += obstracles[i].rotation * deltaTime;
@@ -722,6 +913,9 @@ function isPowerOf2(value) {
 // Initialize the buffers we'll need. For this demo, we just
 // have one object -- a simple three-dimensional cube.
 //
+
+
+
 function initBuffers(gl, shape) {
 
     // Create a buffer for the cube's vertex positions.
@@ -790,8 +984,17 @@ function initBuffers(gl, shape) {
                 gl.STATIC_DRAW);
 
 
+     const normalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+
+    const vertexNormals = shape.vertexNormals;
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals),
+                gl.STATIC_DRAW);
+
     return {
         position: positionBuffer,
+        normal: normalBuffer,
         textureCoord: textureCoordBuffer,
         indices: indexBuffer,
     };
@@ -815,7 +1018,11 @@ function handleKeys(shapes){
                 shapes[i].rotation_Z -= shapes[i].rotation;
             }
     }
+    
 }
+
+
+//  var fieldOfViewRadians = degToRad(60);
 
 function clearScene(gl){
     gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Clear to black, fully opaque
@@ -836,8 +1043,8 @@ function clearScene(gl){
 
     const fieldOfView = 45 * Math.PI / 180;   // in radians
     const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-    const zNear = 0.1;
-    const zFar = 100.0;
+    const zNear = 1;
+    const zFar = 1000.0;
     const projectionMatrix = mat4.create();
 
     // note: glmatrix.js always has the first argument
@@ -847,7 +1054,8 @@ function clearScene(gl){
                      aspect,
                      zNear,
                      zFar);
-    return projectionMatrix;
+
+  return projectionMatrix;
 }
 
 //
@@ -879,6 +1087,11 @@ function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape,
         modelViewMatrix,  // matrix to rotate
         shape.rotation_Z,     // amount to rotate in radians
         [0, 0, 1]);       // axis to rotate around (Z)
+
+    const normalMatrix = mat4.create();
+  mat4.invert(normalMatrix, modelViewMatrix);
+  mat4.transpose(normalMatrix, normalMatrix);
+
     
 
     // Tell WebGL how to pull out the positions from the position
@@ -921,6 +1134,25 @@ function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape,
     gl.enableVertexAttribArray(
         programInfo.attribLocations.textureCoord);
 }
+// Tell WebGL how to pull out the normals from
+  // the normal buffer into the vertexNormal attribute.
+{
+    const numComponents = 3;
+    const type = gl.FLOAT;
+    const normalize = false;
+    const stride = 0;
+    const offset = 0;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normal);
+    gl.vertexAttribPointer(
+        programInfo.attribLocations.vertexNormal,
+        numComponents,
+        type,
+        normalize,
+        stride,
+        offset);
+    gl.enableVertexAttribArray(
+        programInfo.attribLocations.vertexNormal);
+  }
 
     // Tell WebGL which indices to use to index the vertices
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
@@ -939,6 +1171,10 @@ function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape,
         programInfo.uniformLocations.modelViewMatrix,
         false,
         modelViewMatrix);
+    gl.uniformMatrix4fv(
+      programInfo.uniformLocations.normalMatrix,
+      false,
+      normalMatrix)
 
  // Specify the texture to map onto the faces.
       // Tell WebGL we want to affect texture unit 0
@@ -970,12 +1206,27 @@ function refresh_tunnel(gl, shapes, buffer_shapes)
         numofoctagons--;
         shapes.push(create_octagon());
         numofoctagons++;
+        //shapes[numofoctagons - 1].rotation_Y = shapes[numofoctagons - 2].rotation_Y+2;
+
         shapes[numofoctagons - 1].position[2] = shapes[numofoctagons - 2].position[2] - 2;
         shapes[numofoctagons - 1].rotation_X = shapes[numofoctagons - 2].rotation_X;
         shapes[numofoctagons - 1].rotation_Y = shapes[numofoctagons - 2].rotation_Y;
-        shapes[numofoctagons - 1].rotation_Z = shapes[numofoctagons - 2].rotation_Z;
+/*
+        if(framecnt >50)
+            shapes[numofoctagons - 1].rotation_Y = 0.2;
+        else{
+        if(framecnt >100)
+            shapes[numofoctagons - 1].rotation_Y = -0.1;
+        else
+            shapes[numofoctagons - 1].rotation_Y = 0;
+    }
+  */      shapes[numofoctagons - 1].rotation_Z = shapes[numofoctagons - 2].rotation_Z;
         buffer_shapes.push(initBuffers(gl, shapes[numofoctagons - 1]));
     }
+}
+
+function startgame(){
+    gameplay = 1;
 }
 
 function refresh_obstracles(gl, obstracles, buffer_obstracles){
@@ -983,13 +1234,13 @@ function refresh_obstracles(gl, obstracles, buffer_obstracles){
         obstracles.shift();
         buffer_obstracles.shift();
         numofobstracles--;
-        obstracles.push(create_cuboid());
+        obstracles.push(create_2triangles());
         numofobstracles++;
         obstracles[numofobstracles - 1].rotation_Z = Math.random()*Math.PI;
         buffer_obstracles.push(initBuffers(gl, obstracles[numofobstracles - 1]));
     }
     else if(obstracles.length == 0){
-        obstracles.push(create_cuboid());
+        obstracles.push(create_2triangles());
         numofobstracles++;
         obstracles[numofobstracles - 1].rotationZ = Math.random()*Math.PI;
         buffer_obstracles.push(initBuffers(gl, obstracles[numofobstracles - 1]));
