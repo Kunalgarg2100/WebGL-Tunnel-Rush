@@ -1,5 +1,21 @@
 var numofoctagons = 10;
 var numofobstracles = 2;
+var numoftextures = 2;
+var textures = []
+var myArray = []
+var myArray1 = []
+
+var texture_name = ['diff2.jpg']
+var color_red = [0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19];
+var differ_colors = [
+[   0.81,  0.01, 0.99,  0.01, 0.81,  0.19,  0.99,  0.19 ], //yellpw
+[   0.81,  0.81, 0.99,  0.81, 0.81,  0.99,  0.99,  0.99 ], // green
+[   0.81,  0.61, 0.99,  0.61, 0.81,  0.79,  0.99,  0.79 ], // orange
+[   0.61,  0.61, 0.79,  0.61, 0.61,  0.79,  0.79,  0.79 ], // skyblue
+[   0.41,  0.41, 0.59,  0.41, 0.41,  0.59,  0.59,  0.59 ], // sea-green
+[   0.21,  0.61, 0.39,  0.61, 0.21,  0.79,  0.39,  0.79 ], // drakblue
+[   0.01,  0.41, 0.19,  0.41, 0.01,  0.59,  0.19,  0.59 ], // skin
+[   0.01,  0.81, 0.19,  0.81, 0.01,  0.99,  0.19,  0.99 ]] // pink
 
 var typesofobstracles = 1
 var gameplay = 1;
@@ -7,6 +23,23 @@ var statusKeys = {};
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
+}
+
+function shuffle(arra1) {
+    var ctr = arra1.length, temp, index;
+
+// While there are elements in the array
+    while (ctr > 0) {
+// Pick a random index
+        index = Math.floor(Math.random() * ctr);
+// Decrease ctr by 1
+        ctr--;
+// And swap the last element with it
+        temp = arra1[ctr];
+        arra1[ctr] = arra1[index];
+        arra1[index] = temp;
+    }
+    return arra1;
 }
 
 function create_octagon(){
@@ -52,7 +85,7 @@ function create_octagon(){
         //console.log(k);
     }
 
-    var faceColors = [
+ /*   var faceColors = [
     [[0.0, 0.0, 1.0, 1.0],    // blue
         [1.0, 0.0, 0.0, 1.0],    // red
         [0.0, 1.0, 0.0, 1.0],    // green
@@ -77,10 +110,50 @@ function create_octagon(){
       [1.0,  1.0,  1.0,  1.0],    // Bottom Left face: black
       [0.0,  0.0,  0.0,  1.0],    // Bottom face: white
       [1.0,  1.0,  1.0,  1.0]]]
-        // turqoise]
-    var category = getRandomInt(3);
+
+*/
+    var textureCoordinates = [
+   [0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59, // white
+   0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79, // black
+   0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59, // white
+   0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79, // black
+   0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59, // white
+   0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79, // black
+   0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59, // white
+   0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79],  // black
+   
+   [0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79, // black
+   0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59, // white
+   0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79 , // black
+   0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59 , // white
+   0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79 , // black
+   0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59 , // white
+   0.41,  0.61, 0.59,  0.61, 0.41,  0.79,  0.59,  0.79 , // black
+   0.61,  0.41, 0.79,  0.41, 0.61,  0.59,  0.79,  0.59]]; // white
+
+    for(var i = 0;i<n;i++){    
+    myArray = shuffle(differ_colors);
+  //  console.log(myArray);
+
+    myArray = myArray.reduce((acc, val) => acc.concat(val), []);
+   // console.log(myArray);
+
+    textureCoordinates.push(myArray);
+}
+    /*[0.81,  0.01, 0.99,  0.01, 0.81,  0.19,  0.99,  0.19 , //yellpw
+    0.81,  0.81, 0.99,  0.81, 0.81,  0.99,  0.99,  0.99,  // green
+    0.81, 0.61, 0.99,  0.61, 0.81,  0.79,  0.99,  0.79 , // orange
+   0.61,  0.61, 0.79,  0.61, 0.61,  0.79,  0.79,  0.79 , // skyblue
+   0.41,  0.41, 0.59,  0.41, 0.41,  0.59,  0.59,  0.59 , // sea-green
+   0.21,  0.61, 0.39,  0.61, 0.21,  0.79,  0.39,  0.79 , // drakblue
+   0.01,  0.41, 0.19,  0.41, 0.01,  0.59,  0.19,  0.59 , // skin
+   0.01,  0.81, 0.19,  0.81, 0.01,  0.99,  0.19,  0.99 ]] // pink
+*/
+
+    var category = getRandomInt(10);
     return {
-    'faceColors' : faceColors[category],
+    //'faceColors' : faceColors[category],
+    'textureCoordinates' : textureCoordinates[category],
     'indices' : indices,
     'numComponentsColor' : 4,
     'numComponentsPosition' : 3,
@@ -92,7 +165,7 @@ function create_octagon(){
     'speed'     : 7,
     'rotation'  : 0.05,
     'position' : [0, 0, 0],
-    'category' : category,
+    //'category' : category,
     }
 }
 
@@ -174,20 +247,37 @@ function create_cuboid(){
         indices[k++] = (4*i+3)%(4*n);
     }
 
-    var faceColors = [
-      [1.0,  0.0,  0.0,  1.0],    // Right face: red
-      [1.0,  0.0,  0.0,  1.0],    // Left face: red
-      [1.0,  0.0,  0.0,  1.0],    // Top face: red
-      [1.0,  0.0,  0.0,  1.0],    // Bottom face: red
-      [1.0,  0.0,  0.0,  1.0],    // Front face: red
-      [1.0,  0.0,  0.0,  1.0],    // Back face: red
-    ]
+    // var faceColors = [
+    //   [1.0,  0.0,  0.0,  1.0],    // Right face: red
+    //   [1.0,  0.0,  0.0,  1.0],    // Left face: red
+    //   [1.0,  0.0,  0.0,  1.0],    // Top face: red
+    //   [1.0,  0.0,  0.0,  1.0],    // Bottom face: red
+    //   [1.0,  0.0,  0.0,  1.0],    // Front face: red
+    //   [1.0,  0.0,  0.0,  1.0],    // Back face: red
+    // ]
 
+var textureCoordinates = []
+    for(var i = 0;i<n;i++){    
+    textureCoordinates.push(color_red);
+}
+
+    textureCoordinates = textureCoordinates.reduce((acc, val) => acc.concat(val), []);
+
+console.log(textureCoordinates)
+    // const textureCoordinates = [
+    // // Front
+    // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
+    // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
+    // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
+    // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
+    // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
+    // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19];
     return {
-    'faceColors' : faceColors,
+    //'faceColors' : faceColors,
     'indices' : indices,
     'numComponentsColor' : 4,
     'numComponentsPosition' : 3,
+    'textureCoordinates' : textureCoordinates,
     'vertexCount' : 36,
     'positions' : positions,
     'rotation_X' : 0,
@@ -471,26 +561,32 @@ function main() {
 
     const vsSource = `
     attribute vec4 aVertexPosition;
-    attribute vec4 aVertexColor;
+    attribute vec2 aTextureCoord;
 
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
 
-    varying lowp vec4 vColor;
+    varying highp vec2 vTextureCoord;
 
     void main(void) {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-      vColor = aVertexColor;
+      vTextureCoord = aTextureCoord;
     }
   `;
 
     // Fragment shader program
 
     const fsSource = `
-    varying lowp vec4 vColor;
+    precision mediump float;
+    varying vec2 vTextureCoord;
+
+    uniform sampler2D texture0;
+    uniform sampler2D texture1;
 
     void main(void) {
-      gl_FragColor = vColor;
+        vec4 color0 = texture2D(texture0, vTextureCoord);
+        vec4 color1 = texture2D(texture1, vTextureCoord);
+        gl_FragColor = color0;
     }
   `;
 
@@ -506,11 +602,13 @@ function main() {
         program: shaderProgram,
         attribLocations: {
             vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
-            vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
+             textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
         },
         uniformLocations: {
             projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
             modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+            texture0: gl.getUniformLocation(shaderProgram, 'texture0'),
+            texture1: gl.getUniformLocation(shaderProgram, 'texture1'),
         },
     };
 
@@ -533,8 +631,12 @@ function main() {
         buffer_obstracles.push(initBuffers(gl, obstracles[i]));
     }    
 
-    var then = 0;
+    for(var i=0;i<numoftextures;i++){
+        texture = loadTexture(gl, texture_name[i]);
+        textures.push(texture);
+    } 
 
+    var then = 0;
     // Draw the scene repeatedly
     function render(now) {
         now *= 0.001;  // convert to seconds
@@ -549,12 +651,12 @@ function main() {
 
         for(var i=0;i<numofoctagons;i++){
             shapes[i].position[2] += gameplay * shapes[i].speed * deltaTime;
-            drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i]);
+            drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i],texture);
         }
         for(var i=0;i<numofobstracles;i++){
             obstracles[i].position[2] += gameplay * obstracles[i].speed * deltaTime;
             obstracles[i].rotation_Z += obstracles[i].rotation * deltaTime;
-            drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i]);
+            drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i],texture);
         }
 
         requestAnimationFrame(render);
@@ -563,6 +665,58 @@ function main() {
 }
 
 //
+// Initialize a texture and load an image.
+// When the image finished loading copy it into the texture.
+//
+function loadTexture(gl, url) {
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Because images have to be download over the internet
+  // they might take a moment until they are ready.
+  // Until then put a single pixel in the texture so we can
+  // use it immediately. When the image has finished downloading
+  // we'll update the texture with the contents of the image.
+  const level = 0;
+  const internalFormat = gl.RGBA;
+  const width = 1;
+  const height = 1;
+  const border = 0;
+  const srcFormat = gl.RGBA;
+  const srcType = gl.UNSIGNED_BYTE;
+  const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                width, height, border, srcFormat, srcType,
+                pixel);
+
+  const image = new Image();
+  image.onload = function() {
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                  srcFormat, srcType, image);
+
+    // WebGL1 has different requirements for power of 2 images
+    // vs non power of 2 images so check if the image is a
+    // power of 2 in both dimensions.
+    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+       // Yes, it's a power of 2. Generate mips.
+       gl.generateMipmap(gl.TEXTURE_2D);
+    } else {
+       // No, it's not a power of 2. Turn of mips and set
+       // wrapping to clamp to edge
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    }
+  };
+  image.src = url;
+
+  return texture;
+}
+
+function isPowerOf2(value) {
+  return (value & (value - 1)) == 0;
+}
 // initBuffers
 //
 // Initialize the buffers we'll need. For this demo, we just
@@ -590,7 +744,7 @@ function initBuffers(gl, shape) {
     // Now set up the colors for the faces. We'll use solid colors
     // for each face.
 
-    const faceColors = shape.faceColors;
+   /* const faceColors = shape.faceColors;
 
     // Convert the array of colors into a table for all the vertices.
 
@@ -608,7 +762,7 @@ function initBuffers(gl, shape) {
     const colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
+*/
     // Build the element array buffer; this specifies the indices
     // into the vertex arrays for each face's vertices.
 
@@ -627,9 +781,18 @@ function initBuffers(gl, shape) {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
         new Uint16Array(indices), gl.STATIC_DRAW);
 
+
+     const textureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
+    const textureCoordinates = shape.textureCoordinates;
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),
+                gl.STATIC_DRAW);
+
+
     return {
         position: positionBuffer,
-        color: colorBuffer,
+        textureCoord: textureCoordBuffer,
         indices: indexBuffer,
     };
 }
@@ -690,7 +853,7 @@ function clearScene(gl){
 //
 // Draw the scene.
 //
-function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape) {
+function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape,texture) {
     
     // Set the drawing position to the "identity" point, which is
     // the center of the scene.
@@ -739,25 +902,25 @@ function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape)
             programInfo.attribLocations.vertexPosition);
     }
 
-    // Tell WebGL how to pull out the colors from the color buffer
-    // into the vertexColor attribute.
-    {
-        const numComponents = shape.numComponentsColor;
-        const type = gl.FLOAT;
-        const normalize = false;
-        const stride = 0;
-        const offset = 0;
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
-        gl.vertexAttribPointer(
-            programInfo.attribLocations.vertexColor,
-            numComponents,
-            type,
-            normalize,
-            stride,
-            offset);
-        gl.enableVertexAttribArray(
-            programInfo.attribLocations.vertexColor);
-    }
+    // Tell WebGL how to pull out the texture coordinates from
+  // the texture coordinate buffer into the textureCoord attribute.
+  {
+    const numComponents = 2;
+    const type = gl.FLOAT;
+    const normalize = false;
+    const stride = 0;
+    const offset = 0;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textureCoord);
+    gl.vertexAttribPointer(
+        programInfo.attribLocations.textureCoord,
+        numComponents,
+        type,
+        normalize,
+        stride,
+        offset);
+    gl.enableVertexAttribArray(
+        programInfo.attribLocations.textureCoord);
+}
 
     // Tell WebGL which indices to use to index the vertices
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
@@ -776,6 +939,18 @@ function drawScene(gl, programInfo, buffers, deltaTime, projectionMatrix, shape)
         programInfo.uniformLocations.modelViewMatrix,
         false,
         modelViewMatrix);
+
+ // Specify the texture to map onto the faces.
+      // Tell WebGL we want to affect texture unit 0
+
+    // Set each texture unit to use a particular texture.
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, textures[0]);
+
+  // Tell the shader we bound the texture to texture unit 0
+    gl.uniform1i(programInfo.uniformLocations.texture0, 0);
+  
+  // Tell the shader we bound the texture to texture unit 1
 
     {
         const vertexCount = shape.vertexCount;
