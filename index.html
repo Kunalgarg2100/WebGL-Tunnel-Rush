@@ -18,6 +18,25 @@
         #timerel { background: #eeeeee; display: block; margin: 0 auto; }
     </style>
     <style>
+.score-parallelogram {
+    width: 115px;
+    height: 35px;
+    transform: skew(-15deg);
+    background: #ffffff;
+    text-align: center;
+    opacity: 0.6;
+          filter: alpha(opacity=60);
+}
+
+.level-parallelogram {
+    width: 85px;
+    height: 35px;
+    transform: skew(15deg);
+    background: #ffffff;
+    text-align: center;
+    opacity: 0.6;
+          filter: alpha(opacity=60);
+}
         /* The Modal (background) */
         .modal {
             display: none; /* Hidden by default */
@@ -32,20 +51,61 @@
             background-color: rgb(0,0,0); /* Fallback color */
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
+
+        .score{
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 8%; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 125%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+        }
+
+        .level{
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 8%; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 125%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            
+        }
+
         /* Modal Content */
         .modal-content {
             position: relative;
-            background-color: #fefefe;
             margin: auto;
             padding: 0;
-            border: 1px solid #888;
-            width: 30%;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+            width: 25%;
             -webkit-animation-name: animatetop;
             -webkit-animation-duration: 0.4s;
             animation-name: animatetop;
             animation-duration: 0.4s
         }
+
+        .score-content {
+            position: relative;
+            margin: auto;
+            padding: 0;
+            width: 0%;
+
+            
+        }
+
+        .level-content {
+            position: relative;
+            margin: auto;
+            padding: 0;
+            width: 55%;
+
+        }
+        
         /* Add Animation */
         @-webkit-keyframes animatetop {
             from {top:-300px; opacity:0}
@@ -69,20 +129,33 @@
             cursor: pointer;
         }
         .modal-header {
-            padding: 2px 16px;
-            background-color: #41d9f4;
+            border-bottom: 150px solid #ffffff;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            height: 0;
+            width: 250px;
+            padding: 0px 16px;
             color: white;
             text-align: center;
-            height : 50%;
+            opacity: 0.6;
+          filter: alpha(opacity=60);
         }
+        .modal-header p {
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+  font-size: 37px;
+}
         .modal-body {padding: 2px 16px;}
         .modal-footer {
-            padding: 2px 16px;
-            background-color:#f4bc42;
+          border-top: 25px solid transparent;
+          border-left: 50px solid #000000;
+          border-bottom: 25px solid transparent;
             color: white;
-            text-align: center;
-            height: 50%;
+            margin-left: 110px;
         }
+            
+
     </style>
   </head>
 
@@ -98,65 +171,105 @@
         </canvas>
             <div id="timerel" style="margin-left:auto; margin-right:auto;margin-top:0px;text-align: center;width: 15%;font-size: large"></div>
 
-</div>
-   <div id="myModal" class="modal">
-
-            <!-- Modal content -->
+        </div>
+         <div id="myModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="close">&times;</span>
-                    <h2 class="gamehead"></h2>
+                  <p class='gamehead'></p>
+                <div class="modal-footer" id="demo" onmouseover="" style="cursor:pointer;">
                 </div>
-                <div class="modal-footer">
-                    <h2 id="demo" onmouseover="" style="cursor:pointer;">Play Again?</h2>
                 </div>
             </div>
-            </div>  
+            </div>
+        <div id="myScore" class="score">
+          <div class="score-content">
+            <div class="score-parallelogram">
+              <h2 class="score-achieved">1111</h2>
+              </div>
+        </div> 
+        </div>
+        <div id="myLevel" class="level">
+          <div class="level-content">
+            <div class="level-parallelogram">
+              <h2 class="level-achieved">1111</h2>
+              </div>
+        </div> 
+        </div>
+  </div>
 
-   <!-- <audio src="assets/background.m4a" id='backaudio' loop></audio> -->
+   <audio src="assets/background.m4a" id='backaudio' loop></audio>
   </body>
   <script src="libs/gl-matrix.js"></script>
   <script src="libs/jquery-1.6.2.min.js"></script>
-  <script src="webgl-demo.js"></script>
+  <!-- <script src="webgl-demo.js"></script> -->
+  <script src="mixture.js"></script>
   <script type="text/javascript">
         // Get the modal
         var modal = document.getElementById('myModal');
+        var score = document.getElementById('myScore');
+        var level = document.getElementById('myLevel');
+
         // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
+        //var span = document.getElementsByClassName("close")[0];
         // When the user clicks the button, open the modal
-        modelfungo = function() {
+        modelfunstart = function() {
             console.log("func called")
             modal.style.display = "block";
+            //score.style.display = "block";
             x = document.querySelector(".gamehead");
-            x.textContent = "Game Over"
+            x.textContent = "Tunnel Rush"
         }
         modelfunwin = function() {
             console.log("func called")
             modal.style.display = "block";
-            x = document.querySelector(".gamehead");
-            x.textContent = "Congrats! You Win"
+            //x = document.querySelector(".gamehead");
+            //x.textContent = "Congrats! You Win"
         }
         document.getElementById("demo").addEventListener("click", myFunction);
         function myFunction() {
           //console.log("SDgg")
          // console.log(gameplay)
-            startgame();
+            //startgame();
             modal.style.display = "none";
+            score.style.display = "block";
+            level.style.display = "block";
+
 
           //console.log(gameplay)
 
             //document.location.reload();
         }
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            modal.style.display = "none";
+
+        function updateScore(){
+          x = document.querySelector(".score-achieved");
+          x.textContent = framecnt;
         }
+
+        function updateLevel(){
+          x = document.querySelector(".level-achieved");
+          x.textContent = levelnum;
+        }
+
+        function gameOver(){
+           modal.style.display = "block";
+            score.style.display = "none";
+            level.style.display = "none";
+            x = document.querySelector(".gamehead");
+            x.textContent = "Game Over"
+
+        }
+        // When the user clicks on <span> (x), close the modal
+        // span.onclick = function() {
+        //     modal.style.display = "none";
+        // }
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
         }
-        modelfungo();
+        modelfunstart();
+        updateLevel();
+        
   </script>
 </html>
