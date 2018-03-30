@@ -129,7 +129,7 @@ function create_octagon(){
 		'vertexNormals' : vertexNormals,
 		'positions' : positions,
 		'rotation_Z' : 0,
-		'speed'     : 7,
+		'speed'     : level_speeds[levelnum],
 		'rotation'  : 0.05,
 		'position' : [0, 0, 0],
 	}
@@ -139,4 +139,16 @@ function remove_octagons(){
 	shapes.shift();
 	buffer_shapes.shift();
 	numofoctagons--;
+};
+
+function refresh_tunnel(gl, shapes, buffer_shapes)
+{
+	if(shapes[0].position[2] > 1){
+		remove_octagons();
+		shapes.push(create_octagon());
+		numofoctagons++;
+		shapes[numofoctagons - 1].position[2] = shapes[numofoctagons - 2].position[2] - 2;
+		shapes[numofoctagons - 1].rotation_Z = shapes[numofoctagons - 2].rotation_Z;
+		buffer_shapes.push(initBuffers(gl, shapes[numofoctagons - 1]));
+	};
 };

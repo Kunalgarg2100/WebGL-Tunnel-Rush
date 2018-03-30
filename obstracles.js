@@ -37,7 +37,7 @@ function refresh_obstracles(gl, obstracles, buffer_obstracles){
 	if(obstracles[0].position[2] > 1){
 		remove_obstracles();  
 		add_obstracles(obstracles)
-		numofobstracles++;
+			numofobstracles++;
 		obstracles[numofobstracles - 1].rotation_Z = Math.random()*Math.PI;
 		buffer_obstracles.push(initBuffers(gl, obstracles[numofobstracles - 1]));
 	}    
@@ -45,7 +45,7 @@ function refresh_obstracles(gl, obstracles, buffer_obstracles){
 
 function create_cuboid(){
 	const n = 6;
-  	const length = Math.tan(Math.PI/8)/3;
+	const length = Math.tan(Math.PI/8)/3;
 	const height = 1.0;
 	const width = Math.tan(Math.PI/8)/50;
 	const positions = [
@@ -106,7 +106,7 @@ function create_cuboid(){
 
 	textureCoordinates = textureCoordinates.reduce((acc, val) => acc.concat(val), []);
 
-  const vertexNormals = vertex_Normal;
+	const vertexNormals = vertex_Normal;
 
 	return {
 		'position' : [0, 0, -20],
@@ -116,7 +116,7 @@ function create_cuboid(){
 		'textureCoordinates' : textureCoordinates,
 		'vertexNormals' : vertexNormals,
 		'rotation_Z' : 0,
-		'speed'     : 7,
+		'speed'     : level_speeds[levelnum],
 		'rotation'  : Math.PI * Math.random(),
 	}
 }
@@ -175,7 +175,7 @@ function create_halfoctagon(){
 		'textureCoordinates' : textureCoordinates,
 		'vertexNormals' : vertexNormals,
 		'rotation_Z' : 0,
-		'speed'     : 7,
+		'speed'     : level_speeds[levelnum],
 		'rotation'  : Math.PI * Math.random(),
 	}
 }
@@ -267,7 +267,7 @@ function create_2halfoctagon(){
 		'textureCoordinates' : textureCoordinates,
 		'vertexNormals' : vertexNormals,
 		'rotation_Z' : 0,
-		'speed'     : 7,
+		'speed'     : level_speeds[levelnum],
 		'rotation'  : Math.PI * Math.random(),
 	}
 }
@@ -344,7 +344,7 @@ function create_2triangles(){
 		'textureCoordinates' : textureCoordinates,
 		'vertexNormals' : vertexNormals,
 		'rotation_Z' : 0,
-		'speed'     : 7,
+		'speed'     : level_speeds[levelnum],
 		'rotation'  : Math.PI * Math.random(),
 	};
 }
