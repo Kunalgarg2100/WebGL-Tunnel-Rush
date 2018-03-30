@@ -35,3 +35,20 @@ function radToDeg(r) {
 function degToRad(d) {
 	return d * Math.PI / 180;
 }
+
+function updateCameraAngleHorizPlus() {
+  cameraAngleDegHoriz++;
+}
+
+function updateCameraAngleHorizMinus() {
+  cameraAngleDegHoriz--;
+}
+
+function updateCameraAngleVertPlus() {
+  cameraAngleDegVert++;
+}
+
+function updateCameraAngleVertMinus() {
+  cameraAngleDegVert--;
+}
+

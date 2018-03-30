@@ -10,7 +10,8 @@ var levelnum = 1;
 var gameplay = 0;
 var statusKeys = {};
 var onlyblackandwhite = 0;
-var cameraAngleDeg = 0;
+var cameraAngleDegHoriz = 0;
+var cameraAngleDegVert = 0;
 var vertex_Normal = [
   // Right
   1.0,  0.0,  0.0,
@@ -864,7 +865,6 @@ function initBuffers(gl, shape) {
 
 function handleKeys(shapes){
 
-
   if(statusKeys[37]){
     // Left Key
     console.log('left key');
@@ -879,10 +879,23 @@ function handleKeys(shapes){
       shapes[i].rotation_Z -= shapes[i].rotation;
     }
   }
-  if(statusKeys[65]){
-    console.log('right cameraAngleDeg')
-      updateCameraAngle();
+  if(statusKeys[90]){ // Z key
+    console.log('cameraAngleDeg Plus')
+      updateCameraAngleHorizPlus();
   }
+  if(statusKeys[88]){ // X key
+    console.log('cameraAngleDeg Minus')
+      updateCameraAngleHorizMinus();
+  }
+  if(statusKeys[78]){ // 'N' key
+    console.log('cameraAngleDeg Plus')
+      updateCameraAngleVertPlus();
+  }
+  if(statusKeys[77]){ // 'M' key
+    console.log('cameraAngleDeg Minus')
+      updateCameraAngleVertMinus();
+  }
+
   if(statusKeys[66]){
     console.log('only black and white')
       onlyblackandwhite = 1 - onlyblackandwhite;
@@ -890,9 +903,7 @@ function handleKeys(shapes){
 }
 
 
-function updateCameraAngle() {
-  cameraAngleDeg++;
-}
+
 //  var fieldOfViewRadians = degToRad(60);
 
 function clearScene(gl){
@@ -937,8 +948,12 @@ function clearScene(gl){
   const cameraMatrix = mat4.create();
   mat4.rotate(cameraMatrix,  // destination matrix
       cameraMatrix,  // matrix to rotate
-      degToRad(cameraAngleDeg),     // amount to rotate in radians
+      degToRad(cameraAngleDegHoriz),     // amount to rotate in radians
       [0, 1, 0]);
+  mat4.rotate(cameraMatrix,  // destination matrix
+      cameraMatrix,  // matrix to rotate
+      degToRad(cameraAngleDegVert),     // amount to rotate in radians
+      [1, 0, 0]);
   mat4.translate(cameraMatrix, cameraMatrix, [0, 0, radius * 1.5]);
 
   // Get the camera's postion from the matrix we computed
@@ -1104,7 +1119,7 @@ function refresh_obstracles(gl, obstracles, buffer_obstracles){
     buffer_obstracles.shift();
     numofobstracles--;
     add_obstracles(obstracles)
-      numofobstracles++;
+    numofobstracles++;
     obstracles[numofobstracles - 1].rotation_Z = Math.random()*Math.PI;
     buffer_obstracles.push(initBuffers(gl, obstracles[numofobstracles - 1]));
   }    
