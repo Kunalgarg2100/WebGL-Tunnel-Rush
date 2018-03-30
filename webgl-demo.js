@@ -115,7 +115,6 @@ function create_octagon(){
     positions[k++] = r * Math.cos(angle);
     positions[k++] = r * Math.sin(angle);
     positions[k++] = +depth;
-    //console.log(k);
   }
 
   var indices = [];
@@ -129,7 +128,6 @@ function create_octagon(){
     indices[k++] = (4*i+1)%(4*n);
     indices[k++] = (4*i+2)%(4*n);
     indices[k++] = (4*i+3)%(4*n);
-    //console.log(k);
   }
 
   var norm1 = Math.cos(Math.PI/8);
@@ -204,11 +202,7 @@ function create_octagon(){
 
   for(var i = 0;i<n;i++){    
     myArray = shuffle(differ_colors);
-    //  console.log(myArray);
-
     myArray = myArray.reduce((acc, val) => acc.concat(val), []);
-    // console.log(myArray);
-
     textureCoordinates.push(myArray);
   }
 
@@ -217,7 +211,6 @@ function create_octagon(){
   else
     var category = getRandomInt(2);
   return {
-    //'faceColors' : faceColors[category],
     'textureCoordinates' : textureCoordinates[category],
     'indices' : indices,
     'vertexCount' : 48,
@@ -308,16 +301,7 @@ function create_cuboid(){
     indices[k++] = (4*i+3)%(4*n);
   }
 
-  // var faceColors = [
-  //   [1.0,  0.0,  0.0,  1.0],    // Right face: red
-  //   [1.0,  0.0,  0.0,  1.0],    // Left face: red
-  //   [1.0,  0.0,  0.0,  1.0],    // Top face: red
-  //   [1.0,  0.0,  0.0,  1.0],    // Bottom face: red
-  //   [1.0,  0.0,  0.0,  1.0],    // Front face: red
-  //   [1.0,  0.0,  0.0,  1.0],    // Back face: red
-  // ]
   var vertexNormals = vertex_Normal;
-
   var textureCoordinates = []
     for(var i = 0;i<n;i++){    
       textureCoordinates.push(color_red);
@@ -325,17 +309,7 @@ function create_cuboid(){
 
   textureCoordinates = textureCoordinates.reduce((acc, val) => acc.concat(val), []);
 
-  //console.log(textureCoordinates)
-  // const textureCoordinates = [
-  // // Front
-  // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
-  // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
-  // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
-  // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
-  // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
-  // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19];
   return {
-    //'faceColors' : faceColors,
     'indices' : indices,
     'textureCoordinates' : textureCoordinates,
     'vertexNormals' : vertexNormals,
@@ -350,16 +324,9 @@ function create_cuboid(){
 
 function create_halfoctagon(){
   var len = 1;
-  hgt = Math.cos(Math.PI/8)
+  hgt = Math.cos(Math.PI/8);
     var width = Math.tan(Math.PI/8)/50;
-  var faceColors = [
-    [1.0,  0.0,  0.0,  1.0],    // Front face: red
-    [1.0,  0.0,  0.0,  1.0],    // Back face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Front face: red
-    [1.0,  0.0,  0.0,  1.0],    // Back face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-  ]
+
     var textureCoordinates = []
     for(var i = 0;i<6;i++){    
       textureCoordinates.push(color_red);
@@ -370,8 +337,6 @@ function create_halfoctagon(){
 
   return {
     'textureCoordinates' : textureCoordinates,
-
-    //'faceColors' : faceColors,
     'indices' : [
       0,  1,  2,      0,  2,  3,   
       0, 3, 4,    0, 4, 5,  // front
@@ -417,26 +382,9 @@ function create_halfoctagon(){
 
 function create_2halfoctagon(){
   var len = 1;
-  var hgt = Math.cos(Math.PI/8)
+  var hgt = Math.cos(Math.PI/8);
     var width = Math.tan(Math.PI/8)/50;
   var centre_height = 0.3;
-
-  var faceColors = [
-    [1.0,  0.0,  0.0,  1.0],    // Front face: red 
-    [1.0,  0.0,  0.0,  1.0],    // Back face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-
-    [1.0,  0.0,  0.0,  1.0],    // Front face: red 
-    [1.0,  0.0,  0.0,  1.0],    // Back face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-
-  ];
 
   var textureCoordinates = []
     for(var i = 0;i<12;i++){    
@@ -450,7 +398,6 @@ function create_2halfoctagon(){
       vertexNormals.push(vertex_Normal);
     }
   vertexNormals = vertexNormals.reduce((acc, val) => acc.concat(val), []);
-
 
   return {
     'textureCoordinates' : textureCoordinates,
@@ -529,18 +476,6 @@ function create_2triangles(){
   var centre_height = 0.3;
   hgt = Math.cos(Math.PI/16);
   var width = Math.tan(Math.PI/8)/50;
-  var faceColors = [
-    [1.0,  0.0,  0.0,  1.0],    // Front face: red
-    [1.0,  0.0,  0.0,  1.0],    // Back face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Front face: red
-
-    [1.0,  0.0,  0.0,  1.0],    // Back face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-    [1.0,  0.0,  0.0,  1.0],    // Top face: red
-
-  ];
 
   var textureCoordinates = []
     for(var i = 0;i<8;i++){    
@@ -599,7 +534,6 @@ function create_2triangles(){
   return {
     'textureCoordinates' : textureCoordinates,
     'vertexNormals' : vertexNormals,
-    //'faceColors' : faceColors,
     'indices' : [
       0,  1,  2,      
       3,  4,  5,      
@@ -884,25 +818,8 @@ function initBuffers(gl, shape) {
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-  // Now set up the colors for the faces. We'll use solid colors
-    // for each face.
-
-   /* const faceColors = shape.faceColors;
-    // Convert the array of colors into a table for all the vertices.
-    var colors = [];
-    for (var j = 0; j < faceColors.length; ++j) {
-        const c = faceColors[j];
-        // Repeat each color four times for the four vertices of the face
-       for (var i = 0; i < shape.numComponentsColor; ++i) {
-        colors = colors.concat(c);
-        }
-    }
-    const colorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-*/
-    // Build the element array buffer; this specifies the indices
-// into the vertex arrays for each face's vertices.
+  // Build the element array buffer; this specifies the indices
+  // into the vertex arrays for each face's vertices.
 
   const indexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
