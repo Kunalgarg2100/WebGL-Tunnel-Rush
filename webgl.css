@@ -1,0 +1,147 @@
+        * { padding: 0; margin: 0; }
+        #heading {
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            font-size: xx-large;
+        }
+        #heading{ margin: 0 auto}
+        #glcanvas { background: #99afa3; display: block; margin: 0 auto; }
+        #c { background: #eeeeee; display: block; margin: 0 auto; }
+        #timerel { background: #eeeeee; display: block; margin: 0 auto; }
+.score-parallelogram {
+    width: 115px;
+    height: 35px;
+    transform: skew(-15deg);
+    background: #ffffff;
+    text-align: center;
+    opacity: 0.6;
+          filter: alpha(opacity=60);
+}
+
+.level-parallelogram {
+    width: 85px;
+    height: 35px;
+    transform: skew(15deg);
+    background: #ffffff;
+    text-align: center;
+    opacity: 0.6;
+          filter: alpha(opacity=60);
+}
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 20%; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .score{
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 8%; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 125%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+        }
+
+        .level{
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 8%; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 125%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            
+        }
+
+        /* Modal Content */
+        .modal-content {
+            position: relative;
+            margin: auto;
+            padding: 0;
+            width: 25%;
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        .score-content {
+            position: relative;
+            margin: auto;
+            padding: 0;
+            width: 0%;
+
+            
+        }
+
+        .level-content {
+            position: relative;
+            margin: auto;
+            padding: 0;
+            width: 55%;
+
+        }
+        
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+        @keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+        /* The Close Button */
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-header {
+            border-bottom: 150px solid #ffffff;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            height: 0;
+            width: 250px;
+            padding: 0px 16px;
+            color: white;
+            text-align: center;
+            opacity: 0.6;
+          filter: alpha(opacity=60);
+        }
+        .modal-header p {
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+  font-size: 36px;
+}
+        .modal-body {padding: 2px 16px;}
+        .modal-footer {
+          border-top: 25px solid transparent;
+          border-left: 50px solid #000000;
+          border-bottom: 25px solid transparent;
+            color: white;
+            margin-left: 110px;
+        }
