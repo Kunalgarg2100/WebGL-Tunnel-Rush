@@ -1,10 +1,15 @@
 var numofoctagons = 10;
 var numofobstracles = 2;
+var typesofobstracles = 4;
 var numoftextures = 2;
 var textures = []
 var myArray = []
 var myArray1 = []
 var framecnt = 0;
+var levelnum = 1;
+var gameplay = 0;
+var statusKeys = {};
+var onlyblackandwhite = 0;
 var vertex_Normal = [
         // Right
      1.0,  0.0,  0.0,
@@ -54,9 +59,7 @@ var differ_colors = [
 [   0.01,  0.41, 0.19,  0.41, 0.01,  0.59,  0.19,  0.59 ], // skin
 [   0.01,  0.81, 0.19,  0.81, 0.01,  0.99,  0.19,  0.99 ]] // pink
 
-var typesofobstracles = 1
-var gameplay = 0;
-var statusKeys = {};
+
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -79,6 +82,36 @@ function shuffle(arra1) {
     return arra1;
 }
 
+function add_obstracles(obstracles){
+    var category;
+    if(levelnum == 1)
+        category = getRandomInt(typesofobstracles-1);
+    else
+        category = getRandomInt(typesofobstracles);
+    console.log(category);
+
+    switch(category){
+        case 0: {
+            obstracles.push(create_cuboid());
+            break;
+        }
+        case 1: {
+            obstracles.push(create_2triangles());
+            break;
+        }
+        case 2: {
+            obstracles.push(create_halfoctagon());
+            break;
+        }
+        case 3: {
+            obstracles.push(create_2halfoctagon());
+            break;
+        }
+        default:
+              break;
+    }
+}
+ 
 function create_octagon(){
     var n = 8;
     var r = 1;
@@ -237,8 +270,10 @@ var vertexNormals = [
    0.01,  0.41, 0.19,  0.41, 0.01,  0.59,  0.19,  0.59 , // skin
    0.01,  0.81, 0.19,  0.81, 0.01,  0.99,  0.19,  0.99 ]] // pink
 */
-
-    var category = getRandomInt(10);
+    if(!onlyblackandwhite)
+        var category = getRandomInt(10);
+    else
+        var category = getRandomInt(2);
     return {
     //'faceColors' : faceColors[category],
     'textureCoordinates' : textureCoordinates[category],
@@ -353,7 +388,7 @@ var textureCoordinates = []
 
     textureCoordinates = textureCoordinates.reduce((acc, val) => acc.concat(val), []);
 
-console.log(textureCoordinates)
+//console.log(textureCoordinates)
     // const textureCoordinates = [
     // // Front
     // 0.01,  0.01, 0.19,  0.01, 0.01,  0.19,  0.19,  0.19,
@@ -814,8 +849,9 @@ function main() {
     obstracles = [];
     buffer_obstracles = [];
     for(var i=0;i<numofobstracles;i++){
-        obstracles.push(create_2halfoctagon());
-        obstracles[i].position[2] = -10*i;
+        add_obstracles(obstracles);
+        //obstracles.push(create_2halfoctagon());
+        obstracles[i].position[2] = -10*i+2;
         obstracles[i].rotation_Z = i*Math.PI/numofobstracles;
         buffer_obstracles.push(initBuffers(gl, obstracles[i]));
     }    
@@ -826,9 +862,32 @@ function main() {
     } 
 
     var then = 0;
+    function shakey_screen(now) {
+    // requestAnimationFrame(render);
+    framecnt++;
+    now *= 0.001;  // convert to seconds
+    const deltaTime = now - then;
+    then = now;
+    const projectionMatrix = clearScene(gl);
+    for (var i = 0; i < numofoctagons; i++){
+        shapes[i].position[0] = 0.01 * Math.sin(2 * Math.PI * framecnt / 4);
+        drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i],texture);
+    }
+    for (var i = 0; i < numofobstracles; i++){
+        obstracles[i].position[0] = 0.01 * Math.sin(2 * Math.PI * framecnt / 4);
+        drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i],texture);
+    }
+    requestAnimationFrame(shakey_screen);
+  }
     // Draw the scene repeatedly
     function render(now) {
+        if(gameplay)
         framecnt++;
+        if(framecnt > 1000){
+            levelnum++;
+            updateLevel();
+        }
+        updateScore();
         now *= 0.001;  // convert to seconds
         const deltaTime = now - then;
         then = now;
@@ -849,10 +908,32 @@ function main() {
             obstracles[i].rotation_Z += obstracles[i].rotation * deltaTime;
             drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i],texture);
         }
-
-        requestAnimationFrame(render);
+        if(!detect_collision(shapes, obstracles)){
+            console.log('nocollsion')
+            requestAnimationFrame(render);
+        }
+        else{
+            console.log('detect_collision');
+            framecnt = 0;
+            gameOver();
+            shakey_screen(gl, shapes, buffer_shapes, obstracles, buffer_obstracles);
+        }
     }
     requestAnimationFrame(render);
+}
+
+function detect_collision(shapes, obstracles){
+    for (var i = 0; i < numofobstracles; i++){
+        if(obstracles[i].position[2] > -0.5){
+            var theta = obstracles[i].rotation_Z - Math.floor(obstracles[i].rotation_Z / Math.PI) * Math.PI;
+            //console.log(theta)
+            var alpha = shapes[0].rotation_Z - Math.floor(shapes[0].rotation_Z / Math.PI) * Math.PI;
+            if(-Math.PI / 8 <= theta-alpha && theta-alpha <= Math.PI / 8){
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 //
@@ -1021,6 +1102,10 @@ function handleKeys(shapes){
     if(statusKeys[65]){
         console.log('right cameraAngleRadians')
         updateCameraAngle();
+    }
+    if(statusKeys[66]){
+        console.log('only black and white')
+        onlyblackandwhite = 1 - onlyblackandwhite;
     }
 }
 
@@ -1272,24 +1357,20 @@ function refresh_tunnel(gl, shapes, buffer_shapes)
 
 function startgame(){
     gameplay = 1;
+    framecnt = 0;
 }
 
 function refresh_obstracles(gl, obstracles, buffer_obstracles){
-    if(obstracles.length &&  obstracles[0].position[2] > 1){
+    if(obstracles[0].position[2] > 1){
         obstracles.shift();
         buffer_obstracles.shift();
         numofobstracles--;
-        obstracles.push(create_2triangles());
+        add_obstracles(obstracles)
         numofobstracles++;
         obstracles[numofobstracles - 1].rotation_Z = Math.random()*Math.PI;
         buffer_obstracles.push(initBuffers(gl, obstracles[numofobstracles - 1]));
     }
-    else if(obstracles.length == 0){
-        obstracles.push(create_2triangles());
-        numofobstracles++;
-        obstracles[numofobstracles - 1].rotationZ = Math.random()*Math.PI;
-        buffer_obstracles.push(initBuffers(gl, obstracles[numofobstracles - 1]));
-    }
+    
 }
 
 //
