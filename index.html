@@ -144,7 +144,7 @@
   margin: 5%;
   font-weight: bold;
   color: #000000;
-  font-size: 37px;
+  font-size: 36px;
 }
         .modal-body {padding: 2px 16px;}
         .modal-footer {
@@ -174,10 +174,12 @@
         </div>
          <div id="myModal" class="modal">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" id="xz">
                   <p class='gamehead'></p>
-                <div class="modal-footer" id="demo" onmouseover="" style="cursor:pointer;">
-                </div>
+                  <p class="gamescore" style="font-size: 20px";></p>
+                  <div class="modal-footer" id="demo" onmouseover="" style="cursor:pointer;"></div>
+                  <p class="playagain" id="demo1" onmouseover="" style="font-size: 25px;cursor:pointer;"></p>
+
                 </div>
             </div>
             </div>
@@ -197,7 +199,6 @@
         </div>
   </div>
 
-   <audio src="assets/background.m4a" id='backaudio' loop></audio>
   </body>
   <script src="libs/gl-matrix.js"></script>
   <script src="libs/jquery-1.6.2.min.js"></script>
@@ -216,7 +217,10 @@
             modal.style.display = "block";
             //score.style.display = "block";
             x = document.querySelector(".gamehead");
-            x.textContent = "Tunnel Rush"
+            x.textContent = "Tunnel Rush";
+            z = document.querySelector(".playagain");
+            z.style.display = "none";
+
         }
         modelfunwin = function() {
             console.log("func called")
@@ -225,7 +229,12 @@
             //x.textContent = "Congrats! You Win"
         }
         document.getElementById("demo").addEventListener("click", myFunction);
+        document.getElementById("demo1").addEventListener("click", restartGame);
+        function restartGame(){
+          document.location.reload();
+        }
         function myFunction() {
+          console.log('dsjfhj')
           //console.log("SDgg")
          // console.log(gameplay)
             startgame();
@@ -239,6 +248,12 @@
             //document.location.reload();
         }
 
+        function startgame(){
+           gameplay = 1;
+           framecnt = 0;
+           //main();
+        }
+
         function updateScore(){
           x = document.querySelector(".score-achieved");
           x.textContent = framecnt;
@@ -249,12 +264,27 @@
           x.textContent = levelnum;
         }
 
+        var myMusic;
+        myMusic = new sound("song.mp3");
+        myMusic.play();
+
         function gameOver(){
+           gameplay = 0;
            modal.style.display = "block";
             score.style.display = "none";
             level.style.display = "none";
             x = document.querySelector(".gamehead");
             x.textContent = "Game Over"
+            y = document.querySelector(".gamescore");
+            z = document.querySelector(".modal-footer");
+            z.style.display = "none";
+            k = document.querySelector(".playagain");
+            k.style.display = "block";
+            k.textContent = "Play Again?"
+            console.log(framecnt);
+            myMusic.stop();
+            y.textContent = "You travelled: " + String(framecnt);
+            y.style.display = "block";
 
         }
         // When the user clicks on <span> (x), close the modal
@@ -267,6 +297,22 @@
                 modal.style.display = "none";
             }
         }
+        
+
+        function sound(src) {
+          this.sound = document.createElement("audio");
+          this.sound.src = src;
+          this.sound.setAttribute("preload", "auto");
+          this.sound.setAttribute("controls", "none");
+          this.sound.style.display = "none";
+          document.body.appendChild(this.sound);
+          this.play = function(){
+              this.sound.play();
+          }
+          this.stop = function(){
+              this.sound.pause();
+          }    
+      }
         modelfunstart();
         updateLevel();
         

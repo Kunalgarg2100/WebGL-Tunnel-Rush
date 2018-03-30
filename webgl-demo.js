@@ -864,7 +864,7 @@ function main() {
     var then = 0;
     function shakey_screen(now) {
     // requestAnimationFrame(render);
-    framecnt++;
+    //framecnt++;
     now *= 0.001;  // convert to seconds
     const deltaTime = now - then;
     then = now;
@@ -914,7 +914,7 @@ function main() {
         }
         else{
             console.log('detect_collision');
-            framecnt = 0;
+            //framecnt = 0;
             gameOver();
             shakey_screen(gl, shapes, buffer_shapes, obstracles, buffer_obstracles);
         }
@@ -924,11 +924,12 @@ function main() {
 
 function detect_collision(shapes, obstracles){
     for (var i = 0; i < numofobstracles; i++){
+        console.log(obstracles[i].rotation_Z)
         if(obstracles[i].position[2] > -0.5){
             var theta = obstracles[i].rotation_Z - Math.floor(obstracles[i].rotation_Z / Math.PI) * Math.PI;
             //console.log(theta)
-            var alpha = shapes[0].rotation_Z - Math.floor(shapes[0].rotation_Z / Math.PI) * Math.PI;
-            if(-Math.PI / 8 <= theta-alpha && theta-alpha <= Math.PI / 8){
+            //var alpha = shapes[0].rotation_Z - Math.floor(shapes[0].rotation_Z / Math.PI) * Math.PI;
+            if(-Math.PI / 8 <= theta && theta <= Math.PI / 8){
                 return true;
             }
         }
@@ -1355,10 +1356,7 @@ function refresh_tunnel(gl, shapes, buffer_shapes)
     }
 }
 
-function startgame(){
-    gameplay = 1;
-    framecnt = 0;
-}
+
 
 function refresh_obstracles(gl, obstracles, buffer_obstracles){
     if(obstracles[0].position[2] > 1){
