@@ -193,16 +193,14 @@
         <div id="myLevel" class="level">
           <div class="level-content">
             <div class="level-parallelogram">
-              <h2 class="level-achieved">1111</h2>
+              <h2 class="level-achieved">1</h2>
               </div>
         </div> 
         </div>
   </div>
 
   </body>
-  <script src="libs/gl-matrix.js"></script>
-  <script src="libs/jquery-1.6.2.min.js"></script>
-  <script src="webgl-demo.js"></script>
+  
   <script type="text/javascript">
         // Get the modal
         var modal = document.getElementById('myModal');
@@ -317,4 +315,47 @@
         updateLevel();
         
   </script>
+  <!-- vertex shader -->
+<script id="3d-vertex-shader" type="x-shader/x-vertex">
+    attribute vec4 aVertexPosition;
+    attribute vec3 aVertexNormal;
+    attribute vec2 aTextureCoord;
+    uniform mat4 uNormalMatrix;
+    uniform mat4 uModelViewMatrix;
+    uniform mat4 uProjectionMatrix;
+    varying highp vec2 vTextureCoord;
+    varying highp vec3 vLighting;
+    void main(void) {
+      gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      vTextureCoord = aTextureCoord;
+      // Apply lighting effect
+      highp vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+      highp vec3 directionalLightColor = vec3(1, 1, 1);
+      highp vec3 directionalVector = normalize(vec3(0.1, 0.6, 0.1));
+      highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
+      highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+      vLighting = ambientLight + (directionalLightColor * directional);
+    }
+</script>
+<!-- fragment shader -->
+<script id="3d-fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+    varying vec2 vTextureCoord;
+    varying highp vec3 vLighting;
+    uniform sampler2D texture0;
+    uniform sampler2D texture1;
+    void main(void) {
+        highp vec4 color0 = texture2D(texture0, vTextureCoord);
+        highp vec4 color1 = texture2D(texture1, vTextureCoord);
+        gl_FragColor = vec4(color0.rgb * vLighting, color0.a);
+        //gl_FragColor = color0;
+    }
+</script>
+  <script src="libs/gl-matrix.js"></script>
+  <script src="libs/jquery-1.6.2.min.js"></script>
+  <script src="libs/webgl-utils.js"></script>
+  <script src="camera.js"></script>
+  <script src="misc.js"></script>
+  <script src="webgl-demo.js"></script>
+
 </html>
