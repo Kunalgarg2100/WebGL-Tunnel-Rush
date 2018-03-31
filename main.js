@@ -5,6 +5,8 @@ var framecnt = 0;
 var levelnum = 1;
 var level_speeds = [7,7,9];
 var gameplay = 0;
+var gameover = 0;
+var gamepause = 0;
 var statusKeys = {};
 var onlyblackandwhite = 0;
 var cameraAngleDegHoriz = 0;
@@ -122,63 +124,63 @@ function main() {
 	texture = loadTexture(gl, texture_name);
 
 	var then = 0;
-	function shakey_screen(now) {
-		// requestAnimationFrame(render);
-		//framecnt++;
-		now *= 0.001;  // convert to seconds
-		const deltaTime = now - then;
-		then = now;
-		const projectionMatrix = clearScene(gl);
-		for (var i = 0; i < numofoctagons; i++){
-			shapes[i].position[0] = 0.01 * Math.sin(2 * Math.PI * framecnt / 4);
-			drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i],texture);
-		}
-		for (var i = 0; i < numofobstracles; i++){
-			obstracles[i].position[0] = 0.01 * Math.sin(2 * Math.PI * framecnt / 4);
-			drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i],texture);
-		}
-		requestAnimationFrame(shakey_screen);
-	}
+
 	// Draw the scene repeatedly
 	function render(now) {
-		if(gameplay)
-			framecnt++;
-		if(framecnt > 80){
-			levelnum=2;
-			updateLevel();
-		}
-		updateScore();
+
 		now *= 0.001;  // convert to seconds
 		const deltaTime = now - then;
 		then = now;
 		const projectionMatrix = clearScene(gl);
-		refresh_tunnel(gl, shapes, buffer_shapes);
-		refresh_obstracles(gl, obstracles, buffer_obstracles);
 
-		if(gameplay)
-			handleKeys(shapes);
-
-		for(var i=0;i<numofoctagons;i++){
-			shapes[i].position[2] += shapes[i].speed * deltaTime;
-			drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i],texture);
-		}
-		if(gameplay)
-			for(var i=0;i<numofobstracles;i++){
-				obstracles[i].position[2] += gameplay * obstracles[i].speed * deltaTime;
-				obstracles[i].rotation_Z += obstracles[i].rotation * deltaTime;
-				drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i],texture);
+		if(!gameover){
+			if(gameplay && !gamepause)
+				framecnt++;
+			if(framecnt > 80){
+				levelnum=2;
+				updateLevel();
 			}
-		if(!detect_collision(shapes, obstracles)){
-			console.log('nocollsion')
-				requestAnimationFrame(render);
+			updateScore();
+			refresh_tunnel(gl, shapes, buffer_shapes);
+			refresh_obstracles(gl, obstracles, buffer_obstracles);
+
+			if(gameplay)
+				handleKeys(shapes);
+
+			for(var i=0;i<numofoctagons;i++){
+				if(!gamepause)
+				shapes[i].position[2] += level_speeds[levelnum] * deltaTime;
+				drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i],texture);
+			}
+			if(gameplay)
+				for(var i=0;i<numofobstracles;i++){
+					if(!gamepause){
+					obstracles[i].position[2] += gameplay * level_speeds[levelnum] * deltaTime;
+					obstracles[i].rotation_Z += obstracles[i].rotation * deltaTime;
+				}
+					drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i],texture);
+				}
+			if(!detect_collision(shapes, obstracles)){
+				console.log('nocollsion')
+			}
+			else{
+				console.log('detect_collision');
+				gameOver();
+				gameover = 1;
+			}
 		}
 		else{
-			console.log('detect_collision');
-			//framecnt = 0;
-			gameOver();
-			shakey_screen(gl, shapes, buffer_shapes, obstracles, buffer_obstracles);
-		}
-	}
+			for (var i = 0; i < numofoctagons; i++){
+				drawScene(gl, programInfo, buffer_shapes[i], deltaTime, projectionMatrix ,shapes[i],texture);
+			};
+			for (var i = 0; i < numofobstracles; i++){
+				drawScene(gl, programInfo, buffer_obstracles[i], deltaTime, projectionMatrix ,obstracles[i],texture);
+			};
+
+		};
+		requestAnimationFrame(render);
+
+	};
 	requestAnimationFrame(render);
 }
 

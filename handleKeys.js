@@ -9,9 +9,10 @@ $(document).keydown(function(event){
 $(document).keyup(function(event){
 
 	var charCode = event.keyCode;
-	if(charCode == 80){
+	if(charCode == 80){ // P key
 		// P Key
-		gameplay = 1 - gameplay;
+	//	gameplay = 1 - gameplay;
+		gamepause = 1 - gamepause;
 	}
 	var charStr = String.fromCharCode(charCode);
 	statusKeys[charCode] = false;
@@ -19,14 +20,14 @@ $(document).keyup(function(event){
 
 function handleKeys(shapes){
 
-	if(statusKeys[37]){
+	if(statusKeys[37] || statusKeys[65]){
 		// Left Key
 		console.log('left key');
 		for(var i = 0; i < numofoctagons; i++){
 			shapes[i].rotation_Z += shapes[i].rotation;
 		}
 	}
-	if(statusKeys[39]){
+	if(statusKeys[39] || statusKeys[68]){
 		// Right Key
 		console.log('right key');
 		for(var i = 0; i < numofoctagons; i++){

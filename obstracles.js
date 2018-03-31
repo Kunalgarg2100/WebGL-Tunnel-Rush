@@ -116,7 +116,6 @@ function create_cuboid(){
 		'textureCoordinates' : textureCoordinates,
 		'vertexNormals' : vertexNormals,
 		'rotation_Z' : 0,
-		'speed'     : level_speeds[levelnum],
 		'rotation'  : Math.PI * Math.random(),
 	}
 }
@@ -175,7 +174,6 @@ function create_halfoctagon(){
 		'textureCoordinates' : textureCoordinates,
 		'vertexNormals' : vertexNormals,
 		'rotation_Z' : 0,
-		'speed'     : level_speeds[levelnum],
 		'rotation'  : Math.PI * Math.random(),
 	}
 }
@@ -267,7 +265,6 @@ function create_2halfoctagon(){
 		'textureCoordinates' : textureCoordinates,
 		'vertexNormals' : vertexNormals,
 		'rotation_Z' : 0,
-		'speed'     : level_speeds[levelnum],
 		'rotation'  : Math.PI * Math.random(),
 	}
 }
@@ -344,7 +341,6 @@ function create_2triangles(){
 		'textureCoordinates' : textureCoordinates,
 		'vertexNormals' : vertexNormals,
 		'rotation_Z' : 0,
-		'speed'     : level_speeds[levelnum],
 		'rotation'  : Math.PI * Math.random(),
 	};
 }

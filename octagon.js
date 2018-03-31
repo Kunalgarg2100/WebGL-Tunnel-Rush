@@ -7,22 +7,22 @@ function create_octagon(){
 	var positions = [];
 	for(var i=0;i<n;i++)
 	{
-		positions[k++] = r * Math.cos(angle);
 		positions[k++] = r * Math.sin(angle);
+		positions[k++] = r * Math.cos(angle);
 		positions[k++] = -depth;
 
-		positions[k++] = r * Math.cos(angle);
 		positions[k++] = r * Math.sin(angle);
+		positions[k++] = r * Math.cos(angle);
 		positions[k++] = +depth;
 
 		angle += (2*Math.PI)/n;
 
-		positions[k++] = r * Math.cos(angle);
 		positions[k++] = r * Math.sin(angle);
+		positions[k++] = r * Math.cos(angle);
 		positions[k++] = -depth;
 
-		positions[k++] = r * Math.cos(angle);
 		positions[k++] = r * Math.sin(angle);
+		positions[k++] = r * Math.cos(angle);
 		positions[k++] = +depth;
 	}
 
@@ -30,14 +30,20 @@ function create_octagon(){
 	var k = 0;
 	for(var i = 0;i<n;i++)
 	{
-		indices[k++] = (4*i)%(4*n);
-		indices[k++] = (4*i+1)%(4*n);
-		indices[k++] = (4*i+2)%(4*n);
+		for(var j=0;j<3;j++){
+			indices[k++] = 4*i+j;
+		};
+		for(var j=0;j<3;j++){
+			indices[k++] = 4*i+j+1;
+		};
+	};
 
-		indices[k++] = (4*i+1)%(4*n);
-		indices[k++] = (4*i+2)%(4*n);
-		indices[k++] = (4*i+3)%(4*n);
-	}
+	for(var j=0;j<3;j++){
+		indices[k++] = j;
+	};
+	indices[k++] = 0;
+	indices[k++] = 1;
+	indices[k++] = 3;
 
 	var norm1 = Math.cos(Math.PI/8);
 	var norm2 = Math.cos(3*Math.PI/8);
@@ -94,7 +100,7 @@ function create_octagon(){
 	var textureCoordinates = [];
 	var white_black = [];
 	var black_white = [];
-	
+
 	for(var i = 0;i<n;i++){    
 		if(i%2==0){
 			white_black.push(white_color);
@@ -108,7 +114,7 @@ function create_octagon(){
 
 	white_black = white_black.reduce((acc, val) => acc.concat(val), []);
 	black_white = black_white.reduce((acc, val) => acc.concat(val), []);
-	
+
 	textureCoordinates.push(white_black);
 	textureCoordinates.push(black_white);
 
@@ -129,7 +135,6 @@ function create_octagon(){
 		'vertexNormals' : vertexNormals,
 		'positions' : positions,
 		'rotation_Z' : 0,
-		'speed'     : level_speeds[levelnum],
 		'rotation'  : 0.05,
 		'position' : [0, 0, 0],
 	}
